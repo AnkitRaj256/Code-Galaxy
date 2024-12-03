@@ -1,0 +1,148 @@
+/* SignupPage.css */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(45deg, #000000, #502121);
+    color: #fff;
+  }
+  
+  .signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    animation: fadeIn 1.2s ease-in-out;
+  }
+  
+  .container {
+    background: linear-gradient(130deg, #000000, #502121);
+    border-radius: 15px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #ff6b6b;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  label {
+    display: block;
+    font-size: 0.9rem;
+    color: #b7acac;
+    margin-bottom: 0.5rem;
+  }
+  
+  input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #3e3939;
+    border-radius: 5px;
+    background: #282121;
+    color: #fff;
+    font-size: 1rem;
+  }
+  
+  input:focus {
+    color: #fcecec;
+    outline: none;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    padding: 0.8rem;
+    color: #ff6b6b;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    background-color: #ff6b6b;;
+  }
+  
+  .submit-btn:hover {
+    transform: scale(1.05);
+  }
+  
+  .social-login {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  
+  .social-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    width: 48%;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  
+  .social-btn.google {
+    background: #db4437;
+    color: #fff;
+  }
+  
+  .social-btn.github {
+    background: #343030;
+    color: #fff;
+  }
+  
+  .social-btn:hover {
+    transform: scale(1.05);
+  }
+  
+  .forgot-password {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .forgot-password a {
+    color: #ff6b6b;
+    text-decoration: none;
+  }
+  
+  .forgot-password a:hover {
+    text-decoration: underline;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .already-user {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #777;
+  }
+  
+  .already-user .signin-link {
+    color: #ff6b6b;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .already-user .signin-link:hover {
+    text-decoration: underline;
+  }
+    

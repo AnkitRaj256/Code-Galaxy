@@ -1,0 +1,173 @@
+/* General styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    color: #f0f0f0;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .about-page {
+    padding: 10px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .about-page.dark {
+    background-color: #000000;
+    color: #f0f0f0;
+  }
+  header {
+    text-align: center;
+    padding: 50px 20px;
+    background: linear-gradient(135deg, #000000, #1f1f1f); /* Gradient header */
+    border-radius: 10px;
+  }
+  
+  .about-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    animation: fadeIn 1s ease-out;
+  }
+  
+  .tagline {
+    font-size: 1.2rem;
+    color: #aaa;
+    margin-top: 10px;
+    animation: fadeIn 1.2s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  .story-section {
+    background-color: #1f1f1f;
+    padding: 50px;
+    border-radius: 10px;
+    margin: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .story-section h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #f0f0f0;
+  }
+  
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .milestone {
+    margin: 15px 0;
+    font-size: 1.1rem;
+    padding: 15px;
+    background-color: #3a3a3a; /* Dark background for milestones */
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .milestone:hover {
+    transform: translateX(5px); /* Slide on hover */
+  }
+  
+  .team-section {
+    margin: 50px;
+  }
+  
+  .team-profiles {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .profile-card {
+    padding: 40px;
+    background-color: #333;
+    border-radius: 10px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+  }
+  
+  .profile-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+  }
+  
+  .profile-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+  
+  .profile-card h3 {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-top: 10px;
+  }
+  
+  .description {
+    color: #aaa;
+    font-size: 1rem;
+    margin: 10px;
+    text-align: justify;
+    margin-bottom: 30px;
+  }
+  
+  .portfolio-button {
+    padding: 8px 16px;
+    background-color: #ff6b6b;;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .portfolio-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Slightly grow on hover */
+  }
+  
+  
+  /* New Vision Section */
+  .vision-section {
+    background-color:#1f1f1f;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .vision-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    margin-bottom: 20px;
+  }
+  
+  .vision-section p {
+    color: #aaa;
+    font-size: 1rem;
+    margin: 20px;
+  }
+  .join-button{
+    padding: 10px;
+    background-color: #ff6b6b;
+    font-size: medium;
+    border-radius: 20px;
+    border-color: #ff6b6b;
+    margin-top: 20px;
+  }
+  

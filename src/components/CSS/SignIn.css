@@ -1,0 +1,171 @@
+body {
+    margin: 0;
+    font-family: "Arial", sans-serif;
+    line-height: 1.5;
+}
+
+.sign-in-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.sign-in-container {
+    background-color: #171010;
+    padding: 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    animation: fadeIn 1s ease;
+}
+
+.sign-in-container h1 {
+    margin-bottom: 10px;
+    font-size: 2rem;
+    line-height: 2.5rem;
+    color: #ff6b6b;
+}
+
+.sign-in-container p {
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.sign-in-form .form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.sign-in-form .form-group label {
+    position: relative;
+    top: 10px;
+    left: 2px;
+    font-size: 1rem;
+    color: #888;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+.sign-in-form .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 6px;
+    outline: none;
+    line-height: 1.4rem;
+}
+
+.sign-in-form .form-group input:focus {
+    background-color: #444;
+}
+
+.sign-in-form .form-group input:focus + label,
+.sign-in-form .form-group input:not(:placeholder-shown) + label {
+    top: -12px;
+    font-size: 0.8rem;
+    color: #ff6b6b;
+}
+
+.sign-in-btn {
+    background-color: #ff6b6b;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.sign-in-btn:hover {
+    background-color: #b84343;
+    transform: scale(1.05);
+}
+
+.alternative-option {
+    margin-top: 20px;
+}
+
+.alternative-option .signup-link {
+    color: #ff6b6b;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.alternative-option .signup-link:hover {
+    text-decoration: underline;
+}
+
+.background-animation {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(130deg, #000000, #502121);
+    z-index: -1;
+    animation: moveBackground 5s infinite alternate ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes moveBackground {
+    from {
+        transform: translate(0, 0);
+    }
+    to {
+        transform: translate(-20px, -20px);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sign-in-container {
+        padding: 30px;
+        max-width: 350px;
+    }
+    .sign-in-container h1 {
+        font-size: 1.5rem;
+    }
+    .sign-in-container p {
+        font-size: 0.8rem;
+    }
+    .sign-in-btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sign-in-container {
+        padding: 20px;
+        max-width: 300px;
+    }
+    .sign-in-container h1 {
+        font-size: 1.2rem;
+    }
+    .sign-in-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+}

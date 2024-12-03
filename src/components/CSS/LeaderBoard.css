@@ -1,0 +1,63 @@
+/* Dark theme for leaderboard */
+.leaderboard {
+    background: linear-gradient(130deg, #000000, #502121);
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .leaderboard-heading {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 40px;
+    color: #ff6b6b;;
+  }
+  
+  .leaderboard-table {
+    width: 80%;
+    max-width: 800px;
+    background-color: #1d1d1d;
+    color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    border-spacing: 0;
+  }
+  
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 15px;
+    text-align: center;
+    font-size: 1.2rem;
+  }
+  
+  .leaderboard-table th {
+    background-color: #333333;
+    font-weight: bold;
+  }
+  
+  .leaderboard-table tbody tr:nth-child(even) {
+    background-color: #2b2b2b;
+  }
+  
+  .leaderboard-table tbody tr:nth-child(odd) {
+    background-color: #3b3b3b;
+  }
+  
+  .leaderboard-table tbody tr:hover {
+    background-color: #444444;
+  }
+  
+  .leaderboard-table td {
+    border-top: 1px solid #444444;
+  }
+  
+  .leaderboard-table th,
+  .leaderboard-table td {
+    border-bottom: 1px solid #444444;
+  }
+  
