@@ -69,16 +69,13 @@ const handleUserSignUp = asyncHandler(async (req, res) => {
       
 const handleUserLogin = asyncHandler(async (req, res) => {
 
-    const { emailOrUsername, password } = req.body;
+    const { email, password } = req.body;
 
-    if(!emailOrUsername){ 
-        throw new ApiError(400, "Username or Email is required")
+    if(!email){ 
+        throw new ApiError(400, "Email is required")
     }
 
-    // Find the user by either email or username
-    const user = await User.findOne({
-        $or: [{ email: emailOrUsername }, { username: emailOrUsername }]
-    }).select('+password'); // Include the password for comparison;
+    const user = await User.findOne({ email: email }).select('+password'); // Include the password for comparison
 
     if (!user) {
         // User not found
@@ -101,18 +98,12 @@ const handleUserLogin = asyncHandler(async (req, res) => {
         httpOnly: true,
         secure: true,
     }
-
-    const isLoggedInOptions = {
-        httpOnly: false,  // Allow frontend JS to read this cookie
-        secure: false,    // set to true if using HTTPS in production
-        path: '/',        // Make it available across your app
-    };
+    
     
     return res.status(200)
     .cookie("accessToken", accessToken, options)
     .cookie("refreshToken", refreshToken, options)
-    .cookie("isLoggedIn", 'true', isLoggedInOptions)
-    .json({ success: true, message: "Login successful" });
+    .json(loggedInUser);
 })
 
 const logoutUser = asyncHandler(async(req, res) => {

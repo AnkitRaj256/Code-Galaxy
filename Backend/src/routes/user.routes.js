@@ -9,5 +9,6 @@ app.use(express.static('../'));
 app.use('/api/v2/', router)
 
 router.post('/signUp',handleUserSignUp);
+router.post('/signIn', handleUserLogin);
 
 export default router
