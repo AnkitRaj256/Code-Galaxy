@@ -125,26 +125,19 @@ const logoutUser = asyncHandler(async(req, res) => {
         secure: true
     }
 
-    const isLoggedInOptions = {
-        httpOnly: false,  // Allow frontend JS to read this cookie
-        secure: false,    // set to true if using HTTPS in production
-        path: '/',        // Make it available across your app
-    };
-
     return res
     .status(200)
     .cookie("refreshToken", options)
     .cookie("accessToken", options)
-    .cookie("isLoggedIn", 'false', isLoggedInOptions)
     .json( new ApiResponse(200, {} , "User logged out successfully"))
 })
 
 const getCurrentUser = asyncHandler(async(req, res) => {
     // Check if req.user exists (set by verifyJWT middleware)
     if (!req.user) {
-        throw new ApiError(401, "Unauthorized. No user information available.");
+        throw new ApiError(401, "Unauthorized", ["No user information available"]);
     }
-    
+
     return res
     .status(200)
     .json({

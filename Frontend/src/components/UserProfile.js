@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "./CSS/UserProfile.css";
 
@@ -10,6 +10,45 @@ const UserProfile = () => {
   const [expanded, setExpanded] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [fullscreenImage, setFullscreenImage] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state to track login status
+
+  // Fetch user details once when the component is mounted
+  useEffect(() => {
+    fetchUserDetails();
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
+
+  const fetchUserDetails = async () => {
+    try {
+        const response = await fetch('http://localhost:8000/api/v1/my-account', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', // Include cookies in the request if necessary
+        });
+        
+        // Check if response is unauthorized (401)
+        if (response.status === 401) {
+          console.log("You are not logged in");
+          setIsLoggedIn(false); // Set login status to false
+          return; // Stop further execution
+        }
+
+        // If response is not OK (Unauthorized), show the message and exit
+        if (!response.ok) {
+            console.log(`Error: ${response.statusText}`);
+        }
+
+        // If the response is OK, handle the successful data fetch
+        const data = await response.json();
+        console.log(data);
+        setIsLoggedIn(true); // Set login status to true
+    } catch (error) {
+        // Handle any other errors that occur during the fetch process
+        console.error('Failed to fetch user details:', error);
+        setIsLoggedIn(false); // Set login status to false on error
+    }
+  };
 
   // Handle profile picture change
   const handleProfilePicChange = (e) => {
@@ -41,6 +80,28 @@ const UserProfile = () => {
     { title: "Answered: Redux vs Context API", details: "Details about the answer." },
   ];
 
+  const handleLogout = async () => {
+    try {
+        // Send a POST request to log out
+        const response = await fetch('http://localhost:8000/api/v1/logout', {
+            method: 'POST',
+            credentials: 'include', // Ensures cookies are sent along with the request
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Handle successful logout (e.g., redirect to login page or update UI)
+            console.log(data.message); // Should print: "User logged out successfully"
+            setIsLoggedIn(false); // Set login status to false after logout
+        } else {
+            console.error('Logout failed:', data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+  };
+
   return (
     <div className="user-profile dark">
       {/* Header Section */}
@@ -55,8 +116,16 @@ const UserProfile = () => {
           <h1 className="username">{username}</h1>
           <p className="bio">{bio}</p>
         </div>
+        
+        {/* Conditionally render the logout button if the user is logged in */}
+        {isLoggedIn && (
+          <button className="edit-btn" id="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
+        )}
+        
         <button className="edit-btn" onClick={() => setIsEditing(true)}>
-          ✏️ Edit
+          ✏️ Update Profile
         </button>
       </header>
 
