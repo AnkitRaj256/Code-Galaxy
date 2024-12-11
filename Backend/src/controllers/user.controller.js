@@ -2,7 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"
 import { User } from '../model/user.model.js'
 import { ApiResponse } from "../utils/ApiResponse.js";
-// import { Query } from "../model/doubts.model.js"
+import { Query } from "../model/doubts.model.js"
 
 const generateAccessAndRefreshTokens = async(userId) => 
     {
@@ -200,24 +200,23 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
 
 
 const postDoubt = asyncHandler(async (req, res) => {
-    const {doubt, code, language} = req.body;
+    const { doubt, code, language } = req.body;
 
-    if (
-        [doubt, code, language].some((field) => field?.trim() === "")
-    ) {
-        throw new ApiError(400, "All fields are required")
+    // Check if required fields are present and valid
+    if (!doubt?.trim() || !language?.trim()) {
+        throw new ApiError(400, "Doubt and language fields are required");
     }
 
+    // Create the query document
     const query = await Query.create({
         doubt,
-        code,
+        code: code?.trim() || null, // Handle optional code field
         language,
-        user: req.user._id
-    }) 
+        user: req.user._id, // Associate with the logged-in user
+    });
 
     // Respond with the created query
-    return res.status(201)
-    .json(new ApiResponse(200,query,"Query posted successfully"))
+    return res.status(201).json(new ApiResponse(201, query, "Query posted successfully"));
 });
 
 const fetchData = asyncHandler(async (req, res) => {
