@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "./CSS/UserProfile.css";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
   // State hooks inside the component
@@ -11,6 +12,7 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [fullscreenImage, setFullscreenImage] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // New state to track login status
+  const navigate = useNavigate();
 
   // Fetch user details once when the component is mounted
   useEffect(() => {
@@ -94,6 +96,7 @@ const UserProfile = () => {
             // Handle successful logout (e.g., redirect to login page or update UI)
             console.log(data.message); // Should print: "User logged out successfully"
             setIsLoggedIn(false); // Set login status to false after logout
+            navigate("/#hero");
         } else {
             console.error('Logout failed:', data.message);
         }
