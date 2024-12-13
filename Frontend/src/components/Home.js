@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./CSS/Home.css";
 
 function Home() {
   const [scrollY, setScrollY] = useState(0);
+  const location = useLocation(); // Use location to access state
+  const { fullName } = location.state || {}; // Get fullName from state
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
+
+    // Update nameAfterLogin span if fullName is available
+    if (fullName) {
+      const nameSpan = document.getElementById("nameAfterLogin");
+      if (nameSpan) {
+        nameSpan.textContent = fullName;
+      }
+    }
+
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [fullName]);
 
   return (
     <div className="home">
-      {/* Navbar */}
       <nav className="navbar">
         <div className="logo">Code Galaxy</div>
         <ul className="nav-links">
@@ -25,17 +35,16 @@ function Home() {
         </ul>
       </nav>
 
-      {/* Hero Section */}
-      {/* Buttons for Notification and Leaderboard */}
       <div className="top-buttons">
-          <Link to="/notification">
-            <button className="top-btn">Notifications</button>
-          </Link>
-          <Link to="/leaderboard">
-            <button className="top-btn">LeaderBoard</button>
-          </Link>
-        </div>
+        <Link to="/notification">
+          <button className="top-btn">Notifications</button>
+        </Link>
+        <Link to="/leaderboard">
+          <button className="top-btn">LeaderBoard</button>
+        </Link>
+      </div>
       <section id="hero" className="hero">
+        <h2>Hello <span id="nameAfterLogin"></span></h2>
         <h1>Your one-stop solution for coding queries!</h1>
         <div className="cta-buttons">
           <Link to="/AskQuestion">
@@ -43,13 +52,11 @@ function Home() {
           </Link>
           <Link to="/signup">
             <button className="cta-btn">Sign Up</button>
-          </Link> 
+          </Link>
           <Link to="/userprofile">
             <button className="cta-btn">Profile</button>
           </Link>
         </div>
-
-        
       </section>
 
       {/* Features Overview */}

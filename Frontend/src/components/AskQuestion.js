@@ -118,7 +118,7 @@ const AskQuestionPage = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="description">Description</label>
+                <label htmlFor="description">Description/Code</label>
                 <textarea
                   id="description"
                   name="description"
