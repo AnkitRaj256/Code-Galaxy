@@ -20,9 +20,11 @@ const AskQuestionPage = () => {
   const [questionData, setQuestionData] = useState({
     title: '',
     description: '',
-    tags: [],
+    tags: '',
   });
+  const [customTag, setCustomTag] = useState(''); // Separate state for custom tags
   const [errors, setErrors] = useState({});
+  const [otherSelected, setOtherSelected] = useState(false);
 
   // Toggle modal visibility
   const toggleModal = () => {
@@ -49,7 +51,34 @@ const AskQuestionPage = () => {
     e.preventDefault();
     if (validateForm()) {
       console.log('Form submitted', questionData);
-      toggleModal(); // Close modal after submitting
+      toggleModal();
+    }
+  };
+
+  // Handle tag selection change
+  const handleTagSelectChange = (e) => {
+    const value = e.target.value;
+    if (value === 'Other') {
+      setOtherSelected(true);
+    } else {
+      setOtherSelected(false);
+      setQuestionData({
+        ...questionData,
+        tags: `${questionData.tags}#${value}`.trim(),
+      });
+    }
+  };
+
+  // Handle adding custom tags
+  const handleAddTag = () => {
+    if (customTag.trim()) {
+      const newTag = customTag.trim();
+      const currentTags = questionData.tags.split('#').filter((tag) => tag);
+      if (!currentTags.includes(newTag)) {
+        const updatedTags = `${questionData.tags}#${newTag}`.trim();
+        setQuestionData((prevData) => ({ ...prevData, tags: updatedTags }));
+      }
+      setCustomTag('');
     }
   };
 
@@ -89,13 +118,8 @@ const AskQuestionPage = () => {
       </section>
 
       {/* Ask a Question Button */}
-      <button
-        aria-label="Ask a question"
-        className="ask-button"
-        onClick={toggleModal}
-      >
-        <i className="icon-question">❓</i>
-        <span className="button-text">Ask a Question</span>
+      <button className="ask-button" onClick={toggleModal}>
+       ❔ Ask a Question
       </button>
 
       {/* Modal for posting a question */}
@@ -118,7 +142,7 @@ const AskQuestionPage = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="description">Description/Code</label>
+                <label htmlFor="description">Description</label>
                 <textarea
                   id="description"
                   name="description"
@@ -130,48 +154,65 @@ const AskQuestionPage = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="tags">Tags</label>
-                <input
-                  type="text"
-                  id="tags"
-                  name="tags"
-                  value={questionData.tags}
-                  onChange={handleInputChange}
-                  placeholder="Enter tags (comma separated)"
-                />
-              </div>
-
-              <div className="form-group">
                 <label htmlFor="tag-select">Select a tag</label>
                 <select
                   id="tag-select"
                   name="tag-select"
-                  onChange={(e) =>
-                    handleInputChange({
-                      target: { name: "tags", value: `${questionData.tags}, ${e.target.value}`.trim() },
-                    })
-                  }
+                  onChange={handleTagSelectChange}
+                  defaultValue=""
                 >
-                  <option value="" disabled selected>
+                  <option value="" disabled>
                     Choose a tag
                   </option>
-                  <option value="HTML">HTML</option>
-                  <option value="CSS">CSS</option>
-                  <option value="React">React</option>
-                  <option value="C">C</option>
-                  <option value="C++">C++</option>
-                  <option value="Java">Java</option>
-                  <option value="JavaScript">JavaScript</option>
-                  <option value="Node">Node</option>
-                  <option value="Python">Python</option>
-                  <option value="SQL">SQL</option>
-                  <option value="Other">Others (write in the above section, comma separated)</option>
+                  {popularTopics.map((topic, index) => (
+                    <option key={index} value={topic}>
+                      {topic}
+                    </option>
+                  ))}
+                  <option value="Other">Others (write in the below section)</option>
                 </select>
               </div>
 
-              <button type="submit" className="submit-button">Submit Question</button>
+              {otherSelected && (
+                <div className="form-group">
+                  <label htmlFor="custom-tags">Custom Tags</label>
+                  <div className="custom-tag-input">
+                    <input
+                      type="text"
+                      id="custom-tags"
+                      value={customTag}
+                      onChange={(e) => setCustomTag(e.target.value)}
+                      placeholder="Enter custom tag"
+                    />
+                    <button type="button" className="add-tag-button" onClick={handleAddTag}>
+                      Add
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="form-group">
+                <label htmlFor="selected-tags">Selected Tags</label>
+                <div id="selected-tags" className="selected-tags-display">
+                  {questionData.tags ? (
+                    questionData.tags.split('#').map((tag, index) => (
+                      <span key={index} className="tag">
+                        {tag}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="placeholder">No tags selected</span>
+                  )}
+                </div>
+              </div>
+
+              <button type="submit" className="submit-button">
+                Submit Question
+              </button>
             </form>
-            <button className="close-modal" onClick={toggleModal}>X</button>
+            <button className="close-modal" onClick={toggleModal}>
+              Close
+            </button>
           </div>
         </div>
       )}

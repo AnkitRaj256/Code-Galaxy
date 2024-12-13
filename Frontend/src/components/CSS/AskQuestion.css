@@ -1,5 +1,5 @@
 .ask-question-page {
-  background: linear-gradient(130deg, #000000, #502121);
+  background: linear-gradient(130deg, #000, #502121);
   color: #fff;
   font-family: 'Roboto', sans-serif;
   padding: 40px 20px;
@@ -88,7 +88,7 @@
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: 32px;
+  font-size: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
   z-index: 100;
@@ -146,7 +146,8 @@
 }
 
 input[type="text"],
-textarea {
+textarea,
+select {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -159,9 +160,11 @@ textarea {
 }
 
 input[type="text"]:focus,
-textarea:focus {
-  border-color: #ff6b6b;
+textarea:focus,
+select:focus {
   outline: none;
+  border-color: #ff6b6b;
+  box-shadow: 0 0 5px #ff6b6b;
 }
 
 .submit-button {
@@ -190,33 +193,44 @@ textarea:focus {
   border: none;
   cursor: pointer;
 }
-select {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #444444; /* Darker border for dropdown */
+
+/* Style for Selected Tags */
+.selected-tags-display {
+  border: 1px solid #ff6b6b;
+  padding: 8px;
   border-radius: 4px;
-  background-color: #222222; /* Dark background for dropdown */
-  color: #ffffff; /* White text for options */
+  min-height: 40px;
+  background-color: #222;
   font-size: 14px;
-  appearance: none; /* Remove default dropdown styling */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-select option {
-  background-color: #222222; /* Dark background for options */
-  color: #ffffff; /* White text for options */
+.selected-tags-display span {
+  display: inline-block;
+  background: #555;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
 }
 
-select option:hover {
-  background-color: #333333; /* Slightly lighter background on hover */
+.selected-tags-display span.placeholder {
+  color: #aaa;
+  font-style: italic;
 }
 
-select:focus,
-input[type="text"]:focus {
-  outline: none;
-  border-color:#ff6b6b; /* Highlight border on focus */
-  box-shadow: 0 0 5px #ff6b6b; /* Add a glow effect */
+.add-tag-button{
+  background-color: #ff6b6b;
+  color: #fff;
+  padding: 5px;
+  border-radius: 20%;
 }
 
+.add-tag-button:hover{
+  background-color:#712f2f;
+}
 
 @keyframes fadeIn {
   from {
