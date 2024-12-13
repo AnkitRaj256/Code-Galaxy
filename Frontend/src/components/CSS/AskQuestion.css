@@ -190,6 +190,33 @@ textarea:focus {
   border: none;
   cursor: pointer;
 }
+select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #444444; /* Darker border for dropdown */
+  border-radius: 4px;
+  background-color: #222222; /* Dark background for dropdown */
+  color: #ffffff; /* White text for options */
+  font-size: 14px;
+  appearance: none; /* Remove default dropdown styling */
+}
+
+select option {
+  background-color: #222222; /* Dark background for options */
+  color: #ffffff; /* White text for options */
+}
+
+select option:hover {
+  background-color: #333333; /* Slightly lighter background on hover */
+}
+
+select:focus,
+input[type="text"]:focus {
+  outline: none;
+  border-color:#ff6b6b; /* Highlight border on focus */
+  box-shadow: 0 0 5px #ff6b6b; /* Add a glow effect */
+}
+
 
 @keyframes fadeIn {
   from {

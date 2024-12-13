@@ -141,6 +141,34 @@ const AskQuestionPage = () => {
                 />
               </div>
 
+              <div className="form-group">
+                <label htmlFor="tag-select">Select a tag</label>
+                <select
+                  id="tag-select"
+                  name="tag-select"
+                  onChange={(e) =>
+                    handleInputChange({
+                      target: { name: "tags", value: `${questionData.tags}, ${e.target.value}`.trim() },
+                    })
+                  }
+                >
+                  <option value="" disabled selected>
+                    Choose a tag
+                  </option>
+                  <option value="HTML">HTML</option>
+                  <option value="CSS">CSS</option>
+                  <option value="React">React</option>
+                  <option value="C">C</option>
+                  <option value="C++">C++</option>
+                  <option value="Java">Java</option>
+                  <option value="JavaScript">JavaScript</option>
+                  <option value="Node">Node</option>
+                  <option value="Python">Python</option>
+                  <option value="SQL">SQL</option>
+                  <option value="Other">Others (write in the above section, comma separated)</option>
+                </select>
+              </div>
+
               <button type="submit" className="submit-button">Submit Question</button>
             </form>
             <button className="close-modal" onClick={toggleModal}>X</button>
