@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 const UserProfile = () => {
   // State hooks inside the component
   const [profilePic, setProfilePic] = useState("https://via.placeholder.com/100");
-  const [username, setUsername] = useState("John Doe");
-  const [bio, setBio] = useState("Tech Enthusiast | Problem Solver");
+  const [fullname, setFullname] = useState("John Doe");
+  const [bio, setBio] = useState("Update your profile to set your bio");
   const [expanded, setExpanded] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [fullscreenImage, setFullscreenImage] = useState(false);
@@ -44,7 +44,16 @@ const UserProfile = () => {
         // If the response is OK, handle the successful data fetch
         const data = await response.json();
         console.log(data);
-        setIsLoggedIn(true); // Set login status to true
+        setIsLoggedIn(true); // Set login status to true   
+        setFullname(data.user.fullName)
+        console.log(data.user.bio);
+        
+        // Check if bio is undefined and set the default message
+        if (data.user.bio === undefined || data.user.bio === null || data.user.bio.trim() === "") {
+          setBio("Update your profile to set your bio"); // Default bio message
+        } else {
+          setBio(data.user.bio); // Set bio from fetched data
+        }
     } catch (error) {
         // Handle any other errors that occur during the fetch process
         console.error('Failed to fetch user details:', error);
@@ -68,7 +77,7 @@ const UserProfile = () => {
   const handleSave = () => {
     // Save updated profile information
     setIsEditing(false);
-    console.log("Updated Profile:", { username, bio, profilePic });
+    console.log("Updated Profile:", { username: fullname, bio, profilePic });
   };
 
   // Toggle expanded activity details
@@ -116,7 +125,7 @@ const UserProfile = () => {
             className="profile-picture"
             onClick={() => setFullscreenImage(true)}
           />
-          <h1 className="username">{username}</h1>
+          <h1 className="username">{fullname}</h1>
           <p className="bio">{bio}</p>
         </div>
         
@@ -202,8 +211,8 @@ const UserProfile = () => {
               type="text"
               placeholder="Update Username"
               className="input-field"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={fullname}
+              onChange={(e) => setFullname(e.target.value)}
             />
 
             {/* Bio Update */}

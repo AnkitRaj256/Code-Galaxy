@@ -1,45 +1,30 @@
 import mongoose from 'mongoose';
+import { answerSchema } from './answer.model.js'; // Import the answer schema
 const { Schema } = mongoose;
 
-const answerSchema = new mongoose.Schema({
-    text: {
-        type: String,
-        required: true, // Ensures the answer text is mandatory
-    },
-    upvotes: {
-        type: Number,
-        default: 0, // Default value for upvotes
-    },
-    downvotes: {
-        type: Number,
-        default: 0, // Default value for downvotes
-    },
-    answeredBy: {
-        type: Schema.Types.ObjectId,
-        ref: 'User', // Refers to the User model
-        required: true, // Ensures every answer is linked to a user
-    },
-}, { timestamps: true }); // Timestamps for when the answer is created or updated
-
+// Schema for doubts
 const doubtSchema = new mongoose.Schema({
-    doubt: {
+    title: {
         type: String,
-        required: true, // Ensures the doubt field is mandatory
+        required: [true, 'Title is required'],
+        trim: true,
     },
-    code: {
+    description: {
         type: String,
-        default: null, // Default value if no code is provided
+        required: [true, 'Description is required'],
+        trim: true,
     },
-    answers: [answerSchema], // Embeds multiple answers as an array
-    language: {
-        type: String,
-        required: true, // Ensures the language field is mandatory
+    tags: {
+        type: String, // Change from Array to String
+        default: '',  // Default to an empty string
     },
+    answers: [answerSchema], // Embeds multiple answers
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User', // Refers to the User model
-        required: true, // Ensures every query is linked to a user
+        ref: 'User',
+        required: [true, 'User reference is required'],
     },
 }, { timestamps: true });
 
+// Create the Query model from the schema
 export const Query = mongoose.model('Query', doubtSchema);
