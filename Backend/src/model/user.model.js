@@ -43,6 +43,25 @@ const userSchema = new mongoose.Schema({
     refreshToken: {
         type: String,
         select: false // Do not return refresh token by default
+    },
+    questionsAsked: {
+        type: Number,
+        default: 0, // Default value set to 0
+        min: [0, 'Questions asked cannot be negative']
+    },
+    questionsAnswered: {
+        type: Number,
+        default: 0, // Default value set to 0
+        min: [0, 'Questions answered cannot be negative']
+    },
+    badgesEarned: {
+        type: [String],
+        enum: ['iron', 'bronze', 'silver', 'gold'], // Only these badges are allowed
+        default: [], // Default is an empty array
+    },
+    leaderboardRank: {
+        type: Number,
+        default: 0, // Default value is 0 (unranked)
     }
 }, { timestamps: true });
 

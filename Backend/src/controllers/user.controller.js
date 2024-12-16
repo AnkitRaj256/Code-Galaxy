@@ -244,7 +244,14 @@ const postDoubt = asyncHandler(async (req, res) => {
                     questions: [query._id],
                 });
             }
-        }        
+        }  
+        
+        // Increment the 'questionAsked' field for the current user
+        const user = await User.findById(req.user._id);
+        if (user) {
+            user.questionsAsked += 1; // Increment the count
+            await user.save(); // Save the updated user
+        }
 
         return res.status(201).json(new ApiResponse(201, query, "Query posted successfully"));
     } catch (error) {
@@ -284,6 +291,22 @@ const submitAnswer = asyncHandler(async (req, res) => {
     return res.json(updatedDoubt); // Returns the updated doubt
 });
 
+const displayPerticularDoubt = asyncHandler(async (req, res) => {
+    try {
+        const questionId = req.params.id; // Extract ID from route parameters
+        const question = await Query.findById(questionId); // Assuming Mongoose is used
+    
+        if (!question) {
+          return res.status(404).json({ message: 'Question not found' });
+        }
+    
+        res.status(200).json({ question });
+    } catch (error) {
+    console.error('Error fetching question:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 export {
     handleUserSignUp,
     handleUserLogin,
@@ -294,4 +317,5 @@ export {
     submitAnswer,
     postDoubt,
     fetchData,
+    displayPerticularDoubt,
 };

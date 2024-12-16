@@ -16,27 +16,33 @@ const QnA = () => {
 
   useEffect(() => {
     // Fetch questions from an API or database (replace with your backend logic)
+    const mockQuestions = [];
     const fetchQuestions = async () => {
-      // Mock API call
-      const mockQuestions = [
-        {
-          id: 1,
-          title: "What is React?",
-          snippet: "React is a JavaScript library for building user interfaces...",
-          tags: ["JavaScript", "React"],
-          votes: 10,
-          timePosted: "2024-12-02T14:00:00Z",
-        },
-        {
-          id: 2,
-          title: "How to implement Dijkstra's Algorithm?",
-          snippet: "I need help understanding how to implement this algorithm...",
-          tags: ["Algorithms", "Graphs"],
-          votes: 5,
-          timePosted: "2024-12-01T16:00:00Z",
-        },
-      ];
-      setQuestions(mockQuestions);
+      try {
+        const response = await fetch('http://localhost:8000/api/v1/fetchQueries'); // Replace with your API endpoint
+        const data = await response.json();
+        //setQuestions(data);
+        let index = 0;
+        while (index < data.length) {
+          const query = data[index];
+
+          mockQuestions.push({
+            id: query._id, // Use the backend-provided unique ID
+            title: query.title,
+            snippet: query.description, // Map "description" to "snippet"
+            tags: query.tags.split(","), // Convert the string of tags to an array if necessary
+            votes: query.answers.length, // Use the length of answers as the "votes"
+            timePosted: query.createdAt, // Map "createdAt" to "timePosted"
+          });
+
+          index++;
+        }
+        
+        setQuestions(mockQuestions);
+
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
     };
     fetchQuestions();
   }, []);
@@ -78,12 +84,6 @@ const QnA = () => {
             <option value="JavaScript">JavaScript</option>
             <option value="Algorithms">Algorithms</option>
           </select>
-          <select name="difficulty" onChange={handleFilterChange}>
-            <option value="">Difficulty</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
           <label>
             <input
               type="checkbox"
@@ -104,7 +104,7 @@ const QnA = () => {
           <div
             key={q.id}
             className="question-card"
-            onClick={() => navigate(`/questiondetail`)} // Navigate to detailed question view
+            onClick={() => navigate(`/questiondetail/${q.id}`)} // Navigate to detailed question view
           >
             <h3>{q.title}</h3>
             <p>{q.snippet}</p>

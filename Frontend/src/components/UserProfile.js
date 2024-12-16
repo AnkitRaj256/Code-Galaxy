@@ -6,12 +6,15 @@ import { useNavigate } from "react-router-dom";
 const UserProfile = () => {
   // State hooks inside the component
   const [profilePic, setProfilePic] = useState("https://via.placeholder.com/100");
-  const [fullname, setFullname] = useState("John Doe");
+  const [fullname, setFullname] = useState("Anonymus");
   const [bio, setBio] = useState("Update your profile to set your bio");
   const [expanded, setExpanded] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [fullscreenImage, setFullscreenImage] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // New state to track login status
+  const [questionAsked, setQuestionAsked] = useState(0);
+  const [questionsAnswered, setQuestionsAnswered] = useState(0);
+  const [leaderboardRank, setLeaderboardRank] = useState(0);
   const navigate = useNavigate();
 
   // Fetch user details once when the component is mounted
@@ -46,7 +49,11 @@ const UserProfile = () => {
         console.log(data);
         setIsLoggedIn(true); // Set login status to true   
         setFullname(data.user.fullName)
-        console.log(data.user.bio);
+        setQuestionAsked(data.user.questionsAsked);
+        setQuestionsAnswered(data.user.questionsAnswered);
+        setLeaderboardRank(data.user.leaderboardRank);
+        console.log(data.user.questionsAsked);
+        
         
         // Check if bio is undefined and set the default message
         if (data.user.bio === undefined || data.user.bio === null || data.user.bio.trim() === "") {
@@ -145,11 +152,11 @@ const UserProfile = () => {
       <section className="dashboard">
         <motion.div className="card" whileHover={{ scale: 1.05 }}>
           <h3>Questions Asked</h3>
-          <p>25</p>
+          <p>{questionAsked}</p>
         </motion.div>
         <motion.div className="card" whileHover={{ scale: 1.05 }}>
           <h3>Answers Posted</h3>
-          <p>40</p>
+          <p>{questionsAnswered}</p>
         </motion.div>
         <motion.div className="card" whileHover={{ scale: 1.05 }}>
           <h3>Badges Earned</h3>
@@ -157,7 +164,7 @@ const UserProfile = () => {
         </motion.div>
         <motion.div className="card" whileHover={{ scale: 1.05 }}>
           <h3>Leaderboard Rank</h3>
-          <p>#12</p>
+          <p>#{leaderboardRank}</p>
         </motion.div>
       </section>
 

@@ -12,31 +12,27 @@ const QuestionDetail = () => {
   useEffect(() => {
     // Fetch question and answers from the API (replace with actual backend logic)
     const fetchQuestionDetails = async () => {
-      const mockQuestion = {
-        id,
-        title: "What is React?",
-        description:
-          "React is a JavaScript library for building user interfaces. Can someone explain the virtual DOM?",
-        tags: ["JavaScript", "React"],
-        votes: 10,
-        timePosted: "2024-12-02T14:00:00Z",
-      };
+      try {
+        // Replace with your actual API endpoint for fetching a specific question
+        const response = await fetch(`http://localhost:8000/api/v1/questionDetail/${id}`);
+        const data = await response.json();
 
-      const mockAnswers = [
-        {
-          id: 1,
-          content: "The virtual DOM is a lightweight representation of the real DOM.",
-          votes: 5,
-        },
-        {
-          id: 2,
-          content: "React uses the virtual DOM to optimize updates to the actual DOM.",
-          votes: 3,
-        },
-      ];
+        setQuestion({
+          id: data._id,
+          title: data.title,
+          description: data.description,
+          tags: data.tags.split(","),
+          votes: data.answers.length, // Calculate votes or use a backend field
+          timePosted: data.createdAt,
+        });
 
-      setQuestion(mockQuestion);
-      setAnswers(mockAnswers);
+        setAnswers(data.answers || []); // Initialize with the question's answers
+      } catch (error) {
+        console.error("Error fetching question details:", error);
+      }
+
+      //setQuestion(mockQuestion);
+      //setAnswers(mockAnswers);
     };
 
     fetchQuestionDetails();
