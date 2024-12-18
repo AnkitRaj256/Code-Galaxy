@@ -3,6 +3,7 @@ import {ApiError} from "../utils/ApiError.js"
 import { User } from '../model/user.model.js'
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Query } from "../model/doubts.model.js"
+import { Language } from "../model/language.model.js"
 
 const generateAccessAndRefreshTokens = async(userId) => 
     {
@@ -200,24 +201,65 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
 
 
 const postDoubt = asyncHandler(async (req, res) => {
-    const { doubt, code, language } = req.body;
+    try {
+        const { title, description, tags } = req.body;
 
-    // Check if required fields are present and valid
-    if (!doubt?.trim() || !language?.trim()) {
-        throw new ApiError(400, "Doubt and language fields are required");
+        if (!title?.trim() || !description?.trim()) {
+            throw new ApiError(400, "Title and description fields are required");
+        }
+
+        // Process tags: split a string like '#javascript#react' into an array or handle it if already an array
+        const tagArray = typeof tags === 'string'
+            ? tags.split('#').filter(tag => tag.trim()).map(tag => tag.trim())
+            : tags.map(tag => tag.trim());
+
+        const tagString = tagArray.join(', '); // Convert tags to a comma-separated string for Query model
+
+        // Create the new query
+        const query = await Query.create({
+            title,
+            description,
+            tags: tagString,
+            user: req.user._id,
+        });
+
+        // Update the Language model
+        for (const tag of tagArray) {
+            const languageName = ['JavaScript', 'React', 'Node.js', 'Python', 'CSS', 'HTML'].includes(tag) 
+                ? tag 
+                : 'Others';
+        
+            const language = await Language.findOne({ name: languageName });
+        
+            if (language) {
+                // If it exists, add the query ID to the questions array (if not already present)
+                if (!language.questions.includes(query._id)) {
+                    language.questions.push(query._id);
+                    await language.save();
+                }
+            } else {
+                // If it doesn't exist, create a new language entry
+                await Language.create({
+                    name: languageName,
+                    questions: [query._id],
+                });
+            }
+        }  
+        
+        // Increment the 'questionAsked' field for the current user
+        const user = await User.findById(req.user._id);
+        if (user) {
+            user.questionsAsked += 1; // Increment the count
+            await user.save(); // Save the updated user
+        }
+
+        return res.status(201).json(new ApiResponse(201, query, "Query posted successfully"));
+    } catch (error) {
+        console.error("Error in postDoubt:", error);
+        throw error; // AsyncHandler will catch and return the error
     }
-
-    // Create the query document
-    const query = await Query.create({
-        doubt,
-        code: code?.trim() || null, // Handle optional code field
-        language,
-        user: req.user._id, // Associate with the logged-in user
-    });
-
-    // Respond with the created query
-    return res.status(201).json(new ApiResponse(201, query, "Query posted successfully"));
 });
+
 
 const fetchData = asyncHandler(async (req, res) => {
     try {
@@ -249,6 +291,22 @@ const submitAnswer = asyncHandler(async (req, res) => {
     return res.json(updatedDoubt); // Returns the updated doubt
 });
 
+const displayPerticularDoubt = asyncHandler(async (req, res) => {
+    try {
+        const questionId = req.params.id; // Extract ID from route parameters
+        const question = await Query.findById(questionId); // Assuming Mongoose is used
+    
+        if (!question) {
+          return res.status(404).json({ message: 'Question not found' });
+        }
+    
+        res.status(200).json({ question });
+    } catch (error) {
+    console.error('Error fetching question:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 export {
     handleUserSignUp,
     handleUserLogin,
@@ -259,4 +317,5 @@ export {
     submitAnswer,
     postDoubt,
     fetchData,
+    displayPerticularDoubt,
 };

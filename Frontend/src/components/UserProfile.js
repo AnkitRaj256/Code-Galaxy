@@ -6,12 +6,15 @@ import { useNavigate } from "react-router-dom";
 const UserProfile = () => {
   // State hooks inside the component
   const [profilePic, setProfilePic] = useState("https://via.placeholder.com/100");
-  const [username, setUsername] = useState("John Doe");
-  const [bio, setBio] = useState("Tech Enthusiast | Problem Solver");
+  const [fullname, setFullname] = useState("Anonymus");
+  const [bio, setBio] = useState("Update your profile to set your bio");
   const [expanded, setExpanded] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [fullscreenImage, setFullscreenImage] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // New state to track login status
+  const [questionAsked, setQuestionAsked] = useState(0);
+  const [questionsAnswered, setQuestionsAnswered] = useState(0);
+  const [leaderboardRank, setLeaderboardRank] = useState(0);
   const navigate = useNavigate();
 
   // Fetch user details once when the component is mounted
@@ -44,7 +47,20 @@ const UserProfile = () => {
         // If the response is OK, handle the successful data fetch
         const data = await response.json();
         console.log(data);
-        setIsLoggedIn(true); // Set login status to true
+        setIsLoggedIn(true); // Set login status to true   
+        setFullname(data.user.fullName)
+        setQuestionAsked(data.user.questionsAsked);
+        setQuestionsAnswered(data.user.questionsAnswered);
+        setLeaderboardRank(data.user.leaderboardRank);
+        console.log(data.user.questionsAsked);
+        
+        
+        // Check if bio is undefined and set the default message
+        if (data.user.bio === undefined || data.user.bio === null || data.user.bio.trim() === "") {
+          setBio("Update your profile to set your bio"); // Default bio message
+        } else {
+          setBio(data.user.bio); // Set bio from fetched data
+        }
     } catch (error) {
         // Handle any other errors that occur during the fetch process
         console.error('Failed to fetch user details:', error);
@@ -68,7 +84,7 @@ const UserProfile = () => {
   const handleSave = () => {
     // Save updated profile information
     setIsEditing(false);
-    console.log("Updated Profile:", { username, bio, profilePic });
+    console.log("Updated Profile:", { username: fullname, bio, profilePic });
   };
 
   // Toggle expanded activity details
@@ -116,7 +132,7 @@ const UserProfile = () => {
             className="profile-picture"
             onClick={() => setFullscreenImage(true)}
           />
-          <h1 className="username">{username}</h1>
+          <h1 className="username">{fullname}</h1>
           <p className="bio">{bio}</p>
         </div>
         
@@ -136,11 +152,11 @@ const UserProfile = () => {
       <section className="dashboard">
         <motion.div className="card" whileHover={{ scale: 1.05 }}>
           <h3>Questions Asked</h3>
-          <p>25</p>
+          <p>{questionAsked}</p>
         </motion.div>
         <motion.div className="card" whileHover={{ scale: 1.05 }}>
           <h3>Answers Posted</h3>
-          <p>40</p>
+          <p>{questionsAnswered}</p>
         </motion.div>
         <motion.div className="card" whileHover={{ scale: 1.05 }}>
           <h3>Badges Earned</h3>
@@ -148,7 +164,7 @@ const UserProfile = () => {
         </motion.div>
         <motion.div className="card" whileHover={{ scale: 1.05 }}>
           <h3>Leaderboard Rank</h3>
-          <p>#12</p>
+          <p>#{leaderboardRank}</p>
         </motion.div>
       </section>
 
@@ -202,8 +218,8 @@ const UserProfile = () => {
               type="text"
               placeholder="Update Username"
               className="input-field"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={fullname}
+              onChange={(e) => setFullname(e.target.value)}
             />
 
             {/* Bio Update */}

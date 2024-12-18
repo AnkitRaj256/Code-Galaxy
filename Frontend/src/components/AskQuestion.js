@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './CSS/AskQuestion.css';
+import Cookies from 'js-cookie';
 
 // Sample data for previously asked questions and popular topics
 const sampleQuestions = [
@@ -47,13 +48,42 @@ const AskQuestionPage = () => {
   };
 
   // Handle form submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (validateForm()) {
-      console.log('Form submitted', questionData);
-      toggleModal();
+      const payload = {
+        title: questionData.title,
+        description: questionData.description,
+        tags: questionData.tags,
+      };
+      
+      try {
+        const response = await fetch('http://localhost:8000/api/v1/doubts', {
+          method: 'POST',
+          credentials: 'include', // Ensures cookies are sent along with the request
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to post question');
+        }
+  
+        const data = await response.json();
+        console.log('Successfully posted question:', data);
+  
+        // Optionally, clear form and close modal
+        setQuestionData({ title: '', description: '', tags: '' });
+        toggleModal();
+      } catch (error) {
+        console.error('Error posting question:', error);
+      }
     }
   };
+  
 
   // Handle tag selection change
   const handleTagSelectChange = (e) => {
