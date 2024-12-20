@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 import "./CSS/SignUp.css";
-import { FaGoogle, FaGithub } from "react-icons/fa";
-
-const SocialLogin = () => (
-  <div className="social-login">
-    <button className="social-btn google">
-      <FaGoogle /> Sign in with Google
-    </button>
-    <button className="social-btn github">
-      <FaGithub /> Sign in with GitHub
-    </button>
-  </div>
-);
+import GoogleLogin from './GoogleLogin';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -69,7 +59,9 @@ const SignupPage = () => {
   return (
     <div className="signup-page">
       <div className="container">
-        <SocialLogin />
+          <GoogleOAuthProvider clientId="271825264224-mbe58d3qu11v51ovm471v5gu2v3dgopv.apps.googleusercontent.com">
+          <GoogleLogin></GoogleLogin>
+        </GoogleOAuthProvider>
         <form className="signup-form" onSubmit={handleSubmit}>
           <h2>Sign Up</h2>
           <div className="form-group">

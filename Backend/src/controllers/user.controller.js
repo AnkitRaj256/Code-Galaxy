@@ -4,6 +4,8 @@ import { User } from '../model/user.model.js'
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Query } from "../model/doubts.model.js"
 import { Language } from "../model/language.model.js"
+import { oauth2Client } from "../utils/googleClient.js";
+import axios from 'axios';
 
 const generateAccessAndRefreshTokens = async(userId) => 
     {
@@ -382,6 +384,50 @@ const vote = asyncHandler(async (req, res) => {
     }
 });
 
+const googleAuth = asyncHandler(async (req, res) => {
+    const code = req.query.code;
+
+    if (!code) {
+        throw new ApiError(400, "Authorization code is missing");
+    }
+
+    try{
+        const googleRes = await oauth2Client.getToken(code);
+        oauth2Client.setCredentials(googleRes.tokens);
+        const userRes = await axios.get(
+            `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
+        );
+        
+        const { email, name } = userRes.data;
+
+        let user = await User.findOne({email});
+
+        if (!user) {
+            user = await User.create({
+                fullName: name,
+                email,
+            });
+        }
+
+        const { accessToken,refreshToken } = await generateAccessAndRefreshTokens(user._id)
+
+        const loggedInUser = await User.findById(user._id).select( " -password -refreshToken" )
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+        }
+        
+        return res.status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(loggedInUser);
+    }
+    catch(error){
+        console.error("Error during Google OAuth:", error);
+        throw new ApiError(401, `Failed to authenticate with Google: ${error.message}`);
+    }
+});
 
 export {
     handleUserSignUp,
@@ -395,4 +441,5 @@ export {
     fetchData,
     displayPerticularDoubt,
     vote,
+    googleAuth
 };

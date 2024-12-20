@@ -12,6 +12,7 @@ import About from './components/About';
 import ContactUs from './components/ContactUs';
 import QnA from './components/QnA';
 import QuestionDetail from './components/QuestionDetail';
+import NotFound from './NotFound';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path='/contactus' element={<ContactUs />}/>
         <Route path='/qna' element={<QnA />}/>
         <Route path='/questiondetail/:id' element={<QuestionDetail />}/>
+        <Route path="*" element={<NotFound/>} />
       </Routes>
     </Router>
   );
