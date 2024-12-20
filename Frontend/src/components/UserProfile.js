@@ -46,14 +46,11 @@ const UserProfile = () => {
 
         // If the response is OK, handle the successful data fetch
         const data = await response.json();
-        console.log(data);
         setIsLoggedIn(true); // Set login status to true   
         setFullname(data.user.fullName)
         setQuestionAsked(data.user.questionsAsked);
         setQuestionsAnswered(data.user.questionsAnswered);
         setLeaderboardRank(data.user.leaderboardRank);
-        console.log(data.user.questionsAsked);
-        
         
         // Check if bio is undefined and set the default message
         if (data.user.bio === undefined || data.user.bio === null || data.user.bio.trim() === "") {

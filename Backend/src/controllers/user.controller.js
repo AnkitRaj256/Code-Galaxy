@@ -199,7 +199,6 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
     .json(new ApiResponse(200,{},"Password updated successfully"))
 })
 
-
 const postDoubt = asyncHandler(async (req, res) => {
     try {
         const { title, description, tags } = req.body;
@@ -260,7 +259,6 @@ const postDoubt = asyncHandler(async (req, res) => {
     }
 });
 
-
 const fetchData = asyncHandler(async (req, res) => {
     try {
       const doubts = await Query.find();
@@ -272,24 +270,53 @@ const fetchData = asyncHandler(async (req, res) => {
 });
 
 const submitAnswer = asyncHandler(async (req, res) => {
-    const { doubtId, answerText } = req.body;
+    try {
+        const { text } = req.body;
+        const { queryId } = req.body; // Extract queryId from the request parameters      
     
-    if (
-        [doubtId, answerText].some((field) => field?.trim() === "")
-    ) {
-        throw new ApiError(400, "All fields are required")
-    }
+        // Validate the input
+        if (!text || text.trim() === "") {
+            return res.status(400).json({ message: "Text and answeredBy are required" });
+        }
     
-    const updatedDoubt = await Query.findByIdAndUpdate(doubtId, {
-        answer: answerText
-    }, { new: true }); // Returns the updated doubt
+        // Create a new answer object
+        const newAnswer = {
+            text: text.trim(), // Ensure no leading/trailing spaces
+            answeredBy: req.user._id, // Convert to ObjectId
+        };
+    
+        // Find the query by ID and update it
+        const query = await Query.findById(queryId);
+    
+        if (!query) {
+            return res.status(404).json({ message: "Query not found" });
+        }
+    
+        // Add the new answer to the answers array
+        query.answers.push(newAnswer);
+        const updatedQuery = await query.save();
 
-    if (!updatedDoubt) {
-        throw new ApiError(404, "Doubt not found")
+        // Update the `questionsAnswered` field in the User model
+        const user = await User.findById(req.user._id);
+        if (user) {
+        user.questionsAnswered += 1; // Increment the count
+        await user.save(); // Save the updated user
+        } else {
+        return res.status(404).json({ message: "User not found" });
+        }
+    
+        // Return the updated query
+        res.status(201).json(updatedQuery);
+    } catch (error) {
+        console.error("Error submitting answer:", error);
+    
+        if (error instanceof mongoose.Error.CastError) {
+            return res.status(400).json({ message: "Invalid queryId or answeredBy" });
+        }
+    
+        res.status(500).json({ message: "Internal Server Error" });
     }
-
-    return res.json(updatedDoubt); // Returns the updated doubt
-});
+});  
 
 const displayPerticularDoubt = asyncHandler(async (req, res) => {
     try {
@@ -307,6 +334,55 @@ const displayPerticularDoubt = asyncHandler(async (req, res) => {
     }
 });
 
+const vote = asyncHandler(async (req, res) => {
+    try {
+        const { voteType, answerId, questionId } = req.body;
+
+        // Determine the update operation based on the vote type
+        const updateOperation =
+            voteType === 'upvote'
+                ? { $inc: { 'answers.$.upvotes': 1 } }
+                : voteType === 'downvote'
+                ? { $inc: { 'answers.$.downvotes': 1 } }
+                : null;
+
+        if (!updateOperation) {
+            return res.status(400).json({ error: 'Invalid vote type' });
+        }
+
+        // Perform an atomic update to increment the upvotes or downvotes
+        const updatedQuery = await Query.findOneAndUpdate(
+            { _id: questionId, 'answers._id': answerId }, // Match the query and answer IDs
+            updateOperation,
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedQuery) {
+            return res.status(404).json({ error: 'Question or Answer not found' });
+        }
+
+        // Find the updated answer in the answers array
+        const updatedAnswer = updatedQuery.answers.find(
+            (ans) => ans._id.toString() === answerId.toString()
+        );
+
+        if (!updatedAnswer) {
+            return res.status(404).json({ error: 'Answer not found after update' });
+        }
+
+        console.log('Vote updated successfully');
+        // Send back the updated answer with the new vote counts
+        res.json({
+            upvotes: updatedAnswer.upvotes,
+            downvotes: updatedAnswer.downvotes,
+        });
+    } catch (error) {
+        console.error('Error updating votes:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 export {
     handleUserSignUp,
     handleUserLogin,
@@ -318,4 +394,5 @@ export {
     postDoubt,
     fetchData,
     displayPerticularDoubt,
+    vote,
 };

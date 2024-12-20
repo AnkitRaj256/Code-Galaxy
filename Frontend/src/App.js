@@ -27,7 +27,7 @@ function App() {
         <Route path='/about' element={<About />}/>
         <Route path='/contactus' element={<ContactUs />}/>
         <Route path='/qna' element={<QnA />}/>
-        <Route path='/questiondetail' element={<QuestionDetail />}/>
+        <Route path='/questiondetail/:id' element={<QuestionDetail />}/>
       </Routes>
     </Router>
   );

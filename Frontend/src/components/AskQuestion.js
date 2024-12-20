@@ -69,7 +69,12 @@ const AskQuestionPage = () => {
         });
         
         if (!response.ok) {
-          throw new Error('Failed to post question');
+          if(response.statusText==='Unauthorized'){
+            alert('You need to be SignedIn to sumbit a Response.')
+          }
+          else{
+            throw new Error('Failed to post question');
+          }
         }
   
         const data = await response.json();
