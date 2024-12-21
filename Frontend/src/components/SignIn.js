@@ -24,8 +24,15 @@ const SignInPage = () => {
 
       if (response.ok) {
         console.log("Sign-in successful:", data.fullName);
-        // Navigate to Home and pass fullName via state
-        navigate("/#hero", { state: { fullName: data.fullName } });
+
+        // Save user info in local storage
+        try {
+          localStorage.setItem("user-info", JSON.stringify(data));
+        } catch (error) {
+          console.error("Error storing data in localStorage:", error);
+        }
+        
+        navigate("/#hero");
       } else {
         console.error("Sign-in error:", data.message);
         alert(data.message || "Sign-in failed. Please try again.");

@@ -140,7 +140,7 @@ const getCurrentUser = asyncHandler(async(req, res) => {
     if (!req.user) {
         throw new ApiError(401, "Unauthorized", ["No user information available"]);
     }
-
+    
     return res
     .status(200)
     .json({

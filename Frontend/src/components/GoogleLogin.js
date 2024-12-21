@@ -10,12 +10,9 @@ const GoolgeLogin = (props) => {
 
             if (authResult["code"]) {
 				const result = await googleAuth(authResult.code);			
-				//const {email, name} = result.data.user;
-				//const token = result.data.token;
-				//const obj = {email,name, token, image};
-				console.log(result);
-				//localStorage.setItem('user-info',JSON.stringify(obj));
-				//navigate('/dashboard');
+				console.log(result.data);
+				localStorage.setItem('user-info',JSON.stringify(result.data));
+				navigate('/#hero');
 			} else {
 				console.log(authResult);
 				throw new Error(authResult);

@@ -24,44 +24,20 @@ const UserProfile = () => {
 
   const fetchUserDetails = async () => {
     try {
-        const response = await fetch('http://localhost:8000/api/v1/my-account', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include', // Include cookies in the request if necessary
-        });
-        
-        // Check if response is unauthorized (401)
-        if (response.status === 401) {
-          console.log("You are not logged in");
-          setIsLoggedIn(false); // Set login status to false
-          return; // Stop further execution
+        const data = JSON.parse(localStorage.getItem("user-info"));
+        if (!data) {
+            throw new Error('User not logged in');
         }
-
-        // If response is not OK (Unauthorized), show the message and exit
-        if (!response.ok) {
-            console.log(`Error: ${response.statusText}`);
-        }
-
-        // If the response is OK, handle the successful data fetch
-        const data = await response.json();
         setIsLoggedIn(true); // Set login status to true   
-        setFullname(data.user.fullName)
-        setQuestionAsked(data.user.questionsAsked);
-        setQuestionsAnswered(data.user.questionsAnswered);
-        setLeaderboardRank(data.user.leaderboardRank);
-        
-        // Check if bio is undefined and set the default message
-        if (data.user.bio === undefined || data.user.bio === null || data.user.bio.trim() === "") {
-          setBio("Update your profile to set your bio"); // Default bio message
-        } else {
-          setBio(data.user.bio); // Set bio from fetched data
-        }
+        setFullname(data? data.fullName: fullname)
+        setQuestionAsked(data? data.questionsAsked: questionAsked);
+        setQuestionsAnswered(data? data.questionsAnswered: questionsAnswered);
+        setLeaderboardRank(data? data.leaderboardRank: leaderboardRank);
+        setBio(data.bio ? data.bio : bio); // Set bio from fetched data or default bio message
     } catch (error) {
         // Handle any other errors that occur during the fetch process
         console.error('Failed to fetch user details:', error);
-        setIsLoggedIn(false); // Set login status to false on error
+        setIsLoggedIn(false); // Set login status 
     }
   };
 
@@ -107,8 +83,9 @@ const UserProfile = () => {
 
         if (response.ok) {
             // Handle successful logout (e.g., redirect to login page or update UI)
+            // Clear local storage
+            localStorage.removeItem('user-info');
             console.log(data.message); // Should print: "User logged out successfully"
-            setIsLoggedIn(false); // Set login status to false after logout
             navigate("/#hero");
         } else {
             console.error('Logout failed:', data.message);
