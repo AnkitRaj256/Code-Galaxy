@@ -30,7 +30,6 @@ const QuestionDetail = () => {
           content: answer.text,
           votes: answer.upvotes - answer.downvotes,
         }));    
-        
         setQuestion(browseredQuestion);
         setAnswers(parsedAnswers);
       } catch (error) {
@@ -58,8 +57,6 @@ const QuestionDetail = () => {
           questionId: questionId,
          }),
       });
-      
-      console.log(response);
       
       if (response.ok) {
         // Fetch updated answer from the backend
@@ -111,6 +108,8 @@ const QuestionDetail = () => {
         // Parse the response from the backend
         if (response.ok) {
           const updatedQuery = await response.json(); // Updated query data returned by the backend
+          // I want to navigate to QnA.js page
+          navigate('/QnA');
           setAnswers(updatedQuery.answers); // Update answers in the UI
           setNewAnswer(''); // Clear input
         } else {

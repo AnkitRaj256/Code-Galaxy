@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./CSS/Home.css";
-import axios from "axios";
 
 function Home() {
   const [scrollY, setScrollY] = useState(0);
-  const location = useLocation(); // Use location to access state
   const [fullName, setFullName] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -15,9 +14,8 @@ function Home() {
     const fetchUserInfo = async () => {
       try {
         const userInfo = JSON.parse(localStorage.getItem("user-info"));
-        
         setFullName(userInfo ? userInfo.fullName : "");
-        
+        setIsLoggedIn(!!userInfo);
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
@@ -54,9 +52,11 @@ function Home() {
           <Link to="/AskQuestion">
             <button className="cta-btn">Ask a Question</button>
           </Link>
-          <Link to="/signup">
-            <button className="cta-btn">Sign Up</button>
-          </Link>
+          {!isLoggedIn && (
+            <Link to="/signup">
+              <button className="cta-btn">Sign Up</button>
+            </Link>
+          )}
           <Link to="/userprofile">
             <button className="cta-btn">Profile</button>
           </Link>

@@ -1,8 +1,9 @@
 import { Router } from "express";
 import express from "express";
-import { handleUserSignUp,handleUserLogin, logoutUser, getCurrentUser, changeCurrentPassword, 
-    postDoubt,fetchData, submitAnswer, displayPerticularDoubt, vote, googleAuth } from "../controllers/user.controller.js";
+import { handleUserSignUp,handleUserLogin, logoutUser, getCurrentUser,
+    postDoubt,fetchData, submitAnswer, displayPerticularDoubt, vote, googleAuth, updateProfile } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middleware/auth.js"
+import {upload} from "../middleware/multer.middleware.js"
 
 const app = express();
 const router = Router();
@@ -21,5 +22,7 @@ router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/doubts").post(verifyJWT, postDoubt);
 router.route("/submitAnswer").post(verifyJWT,submitAnswer);
 router.route("/answers/vote").post(verifyJWT,vote);
+
+router.route("/update-profile").put(verifyJWT,upload.single("coverImage"), updateProfile)
 
 export default router

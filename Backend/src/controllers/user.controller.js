@@ -1,28 +1,29 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"
 import { User } from '../model/user.model.js'
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { CompleteUserDetail } from "../model/userCompleteDetail.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Query } from "../model/doubts.model.js"
 import { Language } from "../model/language.model.js"
 import { oauth2Client } from "../utils/googleClient.js";
 import axios from 'axios';
 
-const generateAccessAndRefreshTokens = async(userId) => 
-    {
-        try {
-            const user = await User.findById(userId)
-            const accessToken = user.generateAccessToken()
-            const refreshToken = user.generateRefreshToken()
-    
-            user.refreshToken = refreshToken
-            await user.save({validateBeforeSave: true})
-    
-            return {accessToken, refreshToken}
-    
-        } catch (err) {
-            throw new ApiError(500, "Something went wrong while generating access and refresh tokens")
-        }
+const generateAccessAndRefreshTokens = (async(userId) => {
+    try {
+        const user = await User.findById(userId)
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+
+        user.refreshToken = refreshToken
+        await user.save({validateBeforeSave: true})
+
+        return {accessToken, refreshToken}
+
+    } catch (err) {
+        throw new ApiError(500, "Something went wrong while generating access and refresh tokens")
     }
+})
 
 const handleUserSignUp = asyncHandler(async (req, res) => {
     const { fullName, email, username, password } = req.body;
@@ -44,7 +45,8 @@ const handleUserSignUp = asyncHandler(async (req, res) => {
         fullName,
         email,
         password,
-        username: username.toLowerCase()
+        username: username.toLowerCase(),
+        emailToken: crypto.randomBytes(64).toString("hex")
         });
     
         const createdUser = await User.findById(user._id).select("-password -refreshToken");
@@ -68,7 +70,7 @@ const handleUserSignUp = asyncHandler(async (req, res) => {
         // Handle other errors
         throw new ApiError(500, "Something went wrong while registering the user");
     }
-});
+})
       
 const handleUserLogin = asyncHandler(async (req, res) => {
 
@@ -251,6 +253,13 @@ const postDoubt = asyncHandler(async (req, res) => {
         const user = await User.findById(req.user._id);
         if (user) {
             user.questionsAsked += 1; // Increment the count
+
+            // Add the new question to 'quesAskId'
+            user.quesAskId.push({
+                queryId: query._id, // The ObjectId of the question
+                description: title.trim(), // The title from the request body
+            });
+
             await user.save(); // Save the updated user
         }
 
@@ -293,15 +302,23 @@ const submitAnswer = asyncHandler(async (req, res) => {
         if (!query) {
             return res.status(404).json({ message: "Query not found" });
         }
-    
+        
         // Add the new answer to the answers array
         query.answers.push(newAnswer);
         const updatedQuery = await query.save();
+        
 
         // Update the `questionsAnswered` field in the User model
         const user = await User.findById(req.user._id);
         if (user) {
         user.questionsAnswered += 1; // Increment the count
+
+        // Add the new answer ID to 'questionsAnsweredId' if not already present
+        user.questionsAnsweredId.push({
+            queryId: query._id, // The ObjectId of the question
+            description: text.trim(), // The title from the request body
+        });
+        
         await user.save(); // Save the updated user
         } else {
         return res.status(404).json({ message: "User not found" });
@@ -429,6 +446,61 @@ const googleAuth = asyncHandler(async (req, res) => {
     }
 });
 
+const updateProfile = (async (req, res) => {
+    try {
+        console.log('hello');
+        
+        const { bio } = req.body; // Extract `bio` from the request body
+        const coverLocalPath = req.file?.path;
+
+        let coverImageUrl = null;
+
+        // Upload cover image if provided
+        if (coverLocalPath) {
+            const coverImage = await uploadOnCloudinary(coverLocalPath);
+
+            if (!coverImage.url) {
+                throw new ApiError(400, "Error while uploading CoverImg file");
+            }
+
+            coverImageUrl = coverImage.url;
+        }
+
+        // Check if the document exists
+        let userDetails = await User.findOne({ user: req.user?._id });
+        
+        const updateData = {};
+        if (coverImageUrl) updateData.coverImage = coverImageUrl;
+        if (bio) updateData.bio = bio;
+
+        console.log(req.user?._id);
+        
+        // Update the existing document
+        userDetails = await User.findOneAndUpdate(
+            { _id: req.user?._id }, // Correct filter
+            { $set: updateData },    // Correct update operation
+            { new: true, runValidators: true } // Options to return updated document and validate
+        );
+
+        // Send the response
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                userDetails,
+            )
+        );
+    } catch (error) {
+        return res.status(error.statusCode || 500).json(
+            new ApiResponse(
+                error.statusCode || 500,
+                null,
+                error.message ||"An error occurred"
+            )
+        );
+    }
+})
+
+
 export {
     handleUserSignUp,
     handleUserLogin,
@@ -441,5 +513,6 @@ export {
     fetchData,
     displayPerticularDoubt,
     vote,
-    googleAuth
+    googleAuth,
+    updateProfile,
 };

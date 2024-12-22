@@ -10,7 +10,6 @@ const GoolgeLogin = (props) => {
 
             if (authResult["code"]) {
 				const result = await googleAuth(authResult.code);			
-				console.log(result.data);
 				localStorage.setItem('user-info',JSON.stringify(result.data));
 				navigate('/#hero');
 			} else {
