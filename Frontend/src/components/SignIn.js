@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CSS/SignIn.css";
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ const SignInPage = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/signIn", {
+      const response = await fetch(`${baseUrl}/api/v1/signIn`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

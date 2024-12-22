@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './CSS/QnA.css';
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const QuestionDetail = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const QuestionDetail = () => {
     const fetchQuestionDetails = async () => {
       try {
         // Replace with your actual API endpoint for fetching a specific question
-        const response = await fetch(`http://localhost:8000/api/v1/questions/${id}`);
+        const response = await fetch(`${baseUrl}/api/v1/questions/${id}`);
         const data = await response.json();
 
         const browseredQuestion = ({
@@ -45,7 +46,7 @@ const QuestionDetail = () => {
   const handleVote = async (questionId, answerId, type) => {
     try {
       // Send the vote update to the backend
-      const response = await fetch(`http://localhost:8000/api/v1/answers/vote`, {
+      const response = await fetch(`${baseUrl}/api/v1/answers/vote`, {
         method: 'POST',
         credentials: 'include', // Include cookies if needed
         headers: {
@@ -96,7 +97,7 @@ const QuestionDetail = () => {
         };
         
         // Send the new answer to the backend
-        const response = await fetch(`http://localhost:8000/api/v1/submitAnswer`, {
+        const response = await fetch(`${baseUrl}/api/v1/submitAnswer`, {
           method: 'POST',
           credentials: 'include',
           headers: {

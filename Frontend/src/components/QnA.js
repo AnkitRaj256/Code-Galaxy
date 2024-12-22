@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CSS/QnA.css'; // Optional CSS file for additional styling
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const QnA = () => {
   const [questions, setQuestions] = useState([]);
@@ -19,7 +20,7 @@ const QnA = () => {
     const mockQuestions = [];
     const fetchQuestions = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/fetchQueries'); // Replace with your API endpoint
+        const response = await fetch(`${baseUrl}/api/v1/fetchQueries`); // Replace with your API endpoint
         const data = await response.json();
         //setQuestions(data);
         let index = 0;

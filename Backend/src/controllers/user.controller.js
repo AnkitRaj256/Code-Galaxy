@@ -448,8 +448,6 @@ const googleAuth = asyncHandler(async (req, res) => {
 
 const updateProfile = (async (req, res) => {
     try {
-        console.log('hello');
-        
         const { bio } = req.body; // Extract `bio` from the request body
         const coverLocalPath = req.file?.path;
 
@@ -472,8 +470,6 @@ const updateProfile = (async (req, res) => {
         const updateData = {};
         if (coverImageUrl) updateData.coverImage = coverImageUrl;
         if (bio) updateData.bio = bio;
-
-        console.log(req.user?._id);
         
         // Update the existing document
         userDetails = await User.findOneAndUpdate(

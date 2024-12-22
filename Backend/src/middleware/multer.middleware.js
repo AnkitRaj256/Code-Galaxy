@@ -6,7 +6,6 @@ const storage = multer.diskStorage({
       //The cb callback is called with null as the first argument (indicating no error) and the path 
       // "./public/temp" as the second argument, 
       // which is the directory for storing uploaded files.
-      console.log('hello');
       cb(null, "./public/temp")
     },
     filename: function (req, file, cb) {

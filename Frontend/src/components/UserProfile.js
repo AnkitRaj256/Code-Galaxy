@@ -84,8 +84,6 @@ useEffect(() => {
           alert('Profile updated successfully!');
           setIsEditing(false); // Close modal
         } else {
-          console.log("hee",data);
-          
           alert('Failed to update profile.');
         }
       })

@@ -3,6 +3,7 @@ import "./CSS/SignUp.css";
 import GoogleLogin from './GoogleLogin';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 const SignupPage = () => {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -22,7 +23,7 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/api/v1/signUp", {
+      const response = await fetch(`${baseUrl}/api/v1/signUp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
