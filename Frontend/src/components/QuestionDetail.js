@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './CSS/QnA.css';
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const QuestionDetail = () => {
   const { id } = useParams();
-  const [question, setQuestion] = useState(null);
+  const [question, setQuestion] = useState();
   const [answers, setAnswers] = useState([]);
   const [newAnswer, setNewAnswer] = useState('');
   const navigate = useNavigate();
@@ -14,51 +15,119 @@ const QuestionDetail = () => {
     const fetchQuestionDetails = async () => {
       try {
         // Replace with your actual API endpoint for fetching a specific question
-        const response = await fetch(`http://localhost:8000/api/v1/questionDetail/${id}`);
+        const response = await fetch(`${baseUrl}/api/v1/questions/${id}`);
         const data = await response.json();
 
-        setQuestion({
-          id: data._id,
-          title: data.title,
-          description: data.description,
-          tags: data.tags.split(","),
-          votes: data.answers.length, // Calculate votes or use a backend field
-          timePosted: data.createdAt,
-        });
-
-        setAnswers(data.answers || []); // Initialize with the question's answers
+        const browseredQuestion = ({
+          id: data.question._id,
+          title: data.question.title,
+          description: data.question.description,
+          tags: data.question.tags,
+          timePosted: data.question.createdAt,
+        });      
+        // Map answers to match expected format
+        const parsedAnswers = data.question.answers.map((answer) => ({
+          id: answer._id,
+          content: answer.text,
+          votes: answer.upvotes - answer.downvotes,
+        }));    
+        setQuestion(browseredQuestion);
+        setAnswers(parsedAnswers);
       } catch (error) {
         console.error("Error fetching question details:", error);
       }
-
-      //setQuestion(mockQuestion);
-      //setAnswers(mockAnswers);
     };
-
+    
     fetchQuestionDetails();
+
+    
   }, [id]);
+  
+  const handleVote = async (questionId, answerId, type) => {
+    try {
+      // Send the vote update to the backend
+      const response = await fetch(`${baseUrl}/api/v1/answers/vote`, {
+        method: 'POST',
+        credentials: 'include', // Include cookies if needed
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          voteType: type,
+          answerId: answerId,
+          questionId: questionId,
+         }),
+      });
+      
+      if (response.ok) {
+        // Fetch updated answer from the backend
+        const updatedAnswer = await response.json();  
+  
+        // Update the local state with the new vote count
+        setAnswers((prevAnswers) =>
+          prevAnswers.map((answer) =>
+            answer.id === answerId ? { ...answer, votes: updatedAnswer.upvotes-updatedAnswer.downvotes } : answer
+          )
+        );
 
-  const handleVote = (answerId, type) => {
-    setAnswers((prevAnswers) =>
-      prevAnswers.map((answer) =>
-        answer.id === answerId
-          ? { ...answer, votes: answer.votes + (type === 'upvote' ? 1 : -1) }
-          : answer
-      )
-    );
-  };
-
-  const handleAddAnswer = () => {
-    if (newAnswer.trim()) {
-      const newAnswerObj = {
-        id: answers.length + 1,
-        content: newAnswer,
-        votes: 0,
-      };
-      setAnswers((prevAnswers) => [...prevAnswers, newAnswerObj]);
-      setNewAnswer('');
+      } else {
+        if(response.statusText==='Unauthorized'){
+          alert('You need to be SignedIn to sumbit a Response.')
+        }
+        else{
+          const errorData = await response.json();
+          console.error('Error updating vote:', errorData);
+        }
+      }
+    } catch (error) {
+      console.error('Error connecting to backend:', error);
     }
   };
+  
+
+  const handleAddAnswer = async () => {
+    if (newAnswer.trim()) {
+      try {
+        const queryId = question.id;
+  
+        // Create the new answer object to send to the backend
+        const newAnswerObj = {
+          text: newAnswer,
+          queryId: queryId
+        };
+        
+        // Send the new answer to the backend
+        const response = await fetch(`${baseUrl}/api/v1/submitAnswer`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newAnswerObj),
+        });
+        
+        // Parse the response from the backend
+        if (response.ok) {
+          const updatedQuery = await response.json(); // Updated query data returned by the backend
+          // I want to navigate to QnA.js page
+          navigate('/QnA');
+          setAnswers(updatedQuery.answers); // Update answers in the UI
+          setNewAnswer(''); // Clear input
+        } else {
+          if(response.statusText==='Unauthorized'){
+            alert('You need to be SignedIn to sumbit a Response.')
+          }
+          else{
+            const errorData = await response.json();
+            console.error('Error adding answer:', errorData);
+          }
+        }
+      } catch (error) {
+        console.error('Error connecting to backend:', error);
+      }
+    }
+  };
+  
 
   if (!question) return <p>Loading...</p>;
 
@@ -71,26 +140,21 @@ const QuestionDetail = () => {
         <h2>{question.title}</h2>
         <p>{question.description}</p>
         <div className="tags">
-          {question.tags.map((tag, index) => (
-            <span key={index} className="tag">
-              {tag}
-            </span>
-          ))}
+          {question.tags }
         </div>
         <div className="meta">
-          <span>{question.votes} votes</span>
           <span>{new Date(question.timePosted).toLocaleString()}</span>
         </div>
       </div>
       <div className="answers-section">
-        <h3>Answers</h3>
+      <h3>Answers</h3>
         {answers.map((answer) => (
           <div key={answer.id} className="answer-card">
             <p>{answer.content}</p>
             <div className="vote-controls">
-              <button onClick={() => handleVote(answer.id, 'upvote')}>▲</button>
+            <button onClick={() => handleVote(question.id, answer.id, 'upvote')}>▲</button>
               <span>{answer.votes}</span>
-              <button onClick={() => handleVote(answer.id, 'downvote')}>▼</button>
+              <button onClick={() => handleVote(question.id, answer.id, 'downvote')}>▼</button>  
             </div>
           </div>
         ))}

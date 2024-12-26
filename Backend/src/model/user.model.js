@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken"
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: [true, 'Username is required'],
         unique: true,
         lowercase: true,
         trim: true,
@@ -36,7 +35,6 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, 'Password is required'],
         minlength: [6, 'Password must be at least 6 characters long'],
         select: false // Do not return password by default
     },
@@ -62,7 +60,39 @@ const userSchema = new mongoose.Schema({
     leaderboardRank: {
         type: Number,
         default: 0, // Default value is 0 (unranked)
-    }
+    },
+    quesAskId: [
+        {
+            queryId: {
+                type: mongoose.Schema.Types.ObjectId, // Store the ObjectId of the question
+                ref: 'Query', // Reference the Query model
+            },
+            description: {
+                type: String, // Store the associated string (e.g., question description)
+                required: true,
+            },
+        }
+    ],
+    questionsAnsweredId: [
+        {
+            queryId: {
+                type: mongoose.Schema.Types.ObjectId, // Store the ObjectId of the question
+                ref: 'Query', // Reference the Query model
+            },
+            description: {
+                type: String, // Store the associated string (e.g., question description)
+                required: true,
+            },
+        },
+    ],
+    coverImage: {
+        type: String,
+        default: '',
+    },
+    bio: {
+        type: String,
+        default: '',
+    },
 }, { timestamps: true });
 
 userSchema.pre("save", async function (next) {

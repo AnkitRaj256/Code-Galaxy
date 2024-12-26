@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './CSS/AskQuestion.css';
-import Cookies from 'js-cookie';
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 // Sample data for previously asked questions and popular topics
 const sampleQuestions = [
@@ -59,7 +59,7 @@ const AskQuestionPage = () => {
       };
       
       try {
-        const response = await fetch('http://localhost:8000/api/v1/doubts', {
+        const response = await fetch(`${baseUrl}/api/v1/doubts`, {
           method: 'POST',
           credentials: 'include', // Ensures cookies are sent along with the request
           headers: {
@@ -69,7 +69,12 @@ const AskQuestionPage = () => {
         });
         
         if (!response.ok) {
-          throw new Error('Failed to post question');
+          if(response.statusText==='Unauthorized'){
+            alert('You need to be SignedIn to sumbit a Response.')
+          }
+          else{
+            throw new Error('Failed to post question');
+          }
         }
   
         const data = await response.json();

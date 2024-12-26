@@ -15,63 +15,43 @@ const UserProfile = () => {
   const [questionAsked, setQuestionAsked] = useState(0);
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
   const [leaderboardRank, setLeaderboardRank] = useState(0);
+  const [recentQuestions, setRecentQuestions] = useState([]);
+  const [recentAnswers, setRecentAnswers] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
-
-  // Fetch user details once when the component is mounted
-  useEffect(() => {
-    fetchUserDetails();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
-
+ // Fetch user details once when the component is mounted
+useEffect(() => {
   const fetchUserDetails = async () => {
     try {
-        const response = await fetch('http://localhost:8000/api/v1/my-account', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include', // Include cookies in the request if necessary
-        });
-        
-        // Check if response is unauthorized (401)
-        if (response.status === 401) {
-          console.log("You are not logged in");
-          setIsLoggedIn(false); // Set login status to false
-          return; // Stop further execution
+        const data = JSON.parse(localStorage.getItem("user-info"));
+        if (!data) {
+            throw new Error('User not logged in');
         }
-
-        // If response is not OK (Unauthorized), show the message and exit
-        if (!response.ok) {
-            console.log(`Error: ${response.statusText}`);
-        }
-
-        // If the response is OK, handle the successful data fetch
-        const data = await response.json();
-        console.log(data);
         setIsLoggedIn(true); // Set login status to true   
-        setFullname(data.user.fullName)
-        setQuestionAsked(data.user.questionsAsked);
-        setQuestionsAnswered(data.user.questionsAnswered);
-        setLeaderboardRank(data.user.leaderboardRank);
-        console.log(data.user.questionsAsked);
-        
-        
-        // Check if bio is undefined and set the default message
-        if (data.user.bio === undefined || data.user.bio === null || data.user.bio.trim() === "") {
-          setBio("Update your profile to set your bio"); // Default bio message
-        } else {
-          setBio(data.user.bio); // Set bio from fetched data
-        }
+        setFullname(data.fullName || fullname);
+        setQuestionAsked(data.questionsAsked || questionAsked);
+        setQuestionsAnswered(data.questionsAnswered || questionsAnswered);
+        setLeaderboardRank(data.leaderboardRank || leaderboardRank);
+        setBio(data.bio || bio); // Set bio from fetched data or default bio message
+        setRecentQuestions(data.quesAskId);
+        setRecentAnswers(data.questionsAnsweredId);
+        setProfilePic(data.coverImage || profilePic); // Set profile picture from fetched data or default image
+        setBio(data.bio || bio); // Set bio from fetched
     } catch (error) {
         // Handle any other errors that occur during the fetch process
         console.error('Failed to fetch user details:', error);
-        setIsLoggedIn(false); // Set login status to false on error
+        setIsLoggedIn(false); // Set login status 
     }
   };
+
+  fetchUserDetails();
+}, []); // Empty dependency array ensures this runs only once when the component mounts
 
   // Handle profile picture change
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onload = () => {
         setProfilePic(reader.result); // Update profile picture with base64
@@ -82,22 +62,36 @@ const UserProfile = () => {
 
   // Handle save action
   const handleSave = () => {
-    // Save updated profile information
-    setIsEditing(false);
-    console.log("Updated Profile:", { username: fullname, bio, profilePic });
+    const formData = new FormData();
+  
+    if (selectedFile) {
+      formData.append('coverImage', selectedFile); // Add profile picture
+    }
+    
+    formData.append('bio', bio); // Add bio
+    
+    fetch('http://localhost:8000/api/v1/update-profile', { // Replace with your backend endpoint
+      method: 'PUT',
+      body: formData,
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          if (data.profilePicUrl) {
+            setProfilePic(data.profilePicUrl); // Update profile picture state
+          }
+          alert('Profile updated successfully!');
+          setIsEditing(false); // Close modal
+        } else {
+          alert('Failed to update profile.');
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating profile:', error);
+      });
   };
-
-  // Toggle expanded activity details
-  const toggleExpand = (index) => {
-    setExpanded(expanded === index ? null : index);
-  };
-
-  // Sample activity data
-  const activities = [
-    { title: "Asked: How to learn React?", details: "Details about the question." },
-    { title: "Answered: Redux vs Context API", details: "Details about the answer." },
-  ];
-
+  
   const handleLogout = async () => {
     try {
         // Send a POST request to log out
@@ -110,11 +104,17 @@ const UserProfile = () => {
 
         if (response.ok) {
             // Handle successful logout (e.g., redirect to login page or update UI)
+            // Clear local storage
+            localStorage.removeItem('user-info');
             console.log(data.message); // Should print: "User logged out successfully"
-            setIsLoggedIn(false); // Set login status to false after logout
             navigate("/#hero");
         } else {
-            console.error('Logout failed:', data.message);
+          if(data.message==="jwt expired"){
+            localStorage.removeItem('user-info');
+            alert("Session Expired. Please login again.");
+            navigate("/#hero");
+          }
+          console.error("helo", data.message);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -171,26 +171,28 @@ const UserProfile = () => {
       {/* Recent Activity Section */}
       <section className="recent-activity">
         <h2>Recent Activity</h2>
-        {activities.map((activity, index) => (
-          <motion.div
-            className="activity-item"
-            key={index}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            onClick={() => toggleExpand(index)}
-          >
-            <p>{activity.title}</p>
-            {expanded === index && (
-              <motion.div
-                className="details"
-                initial={{ height: 0 }}
-                animate={{ height: "auto" }}
-              >
-                {activity.details}
-              </motion.div>
-            )}
-          </motion.div>
-        ))}
+          <h3>Question Asked</h3>
+            {recentQuestions && recentQuestions.length > 0 ? (
+            recentQuestions.map((question, index) => (
+              <div key={index} className="activity-item"
+              onClick={() => navigate(`/questiondetail/${question.queryId}`)}>
+                <p>{question.description}</p>
+              </div>
+            ))
+          ) : (
+            <p>No recent questions to display.</p>
+          )}
+          <h3>Answers Given</h3>
+            {recentAnswers && recentAnswers.length > 0 ? (
+            recentAnswers.map((question, index) => (
+              <div key={index} className="activity-item"
+              onClick={() => navigate(`/questiondetail/${question.queryId}`)}>
+                <p>{question.description}</p>
+              </div>
+            ))
+          ) : (
+            <p>No recent questions to display.</p>
+          )}
       </section>
 
       {/* Modal for Editing Profile */}
@@ -212,15 +214,6 @@ const UserProfile = () => {
                 onChange={(e) => handleProfilePicChange(e)}
               />
             </div>
-
-            {/* Username Update */}
-            <input
-              type="text"
-              placeholder="Update Username"
-              className="input-field"
-              value={fullname}
-              onChange={(e) => setFullname(e.target.value)}
-            />
 
             {/* Bio Update */}
             <textarea

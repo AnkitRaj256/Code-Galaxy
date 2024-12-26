@@ -4,23 +4,25 @@ import "./CSS/Home.css";
 
 function Home() {
   const [scrollY, setScrollY] = useState(0);
-  const location = useLocation(); // Use location to access state
-  const { fullName } = location.state || {}; // Get fullName from state
+  const [fullName, setFullName] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
 
-    // Update nameAfterLogin span if fullName is available
-    if (fullName) {
-      const nameSpan = document.getElementById("nameAfterLogin");
-      if (nameSpan) {
-        nameSpan.textContent = fullName;
+    const fetchUserInfo = async () => {
+      try {
+        const userInfo = JSON.parse(localStorage.getItem("user-info"));
+        setFullName(userInfo ? userInfo.fullName : "");
+        setIsLoggedIn(!!userInfo);
+      } catch (error) {
+        console.error("Error fetching user info:", error);
       }
-    }
-
+    };
+    fetchUserInfo();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [fullName]);
+  }, []);
 
   return (
     <div className="home">
@@ -44,15 +46,17 @@ function Home() {
         </Link>
       </div>
       <section id="hero" className="hero">
-        <h2>Hello <span id="nameAfterLogin"></span></h2>
+        <h2>Hello <span id="nameAfterLogin">{fullName}</span></h2>
         <h1>Your one-stop solution for coding queries!</h1>
         <div className="cta-buttons">
           <Link to="/AskQuestion">
             <button className="cta-btn">Ask a Question</button>
           </Link>
-          <Link to="/signup">
-            <button className="cta-btn">Sign Up</button>
-          </Link>
+          {!isLoggedIn && (
+            <Link to="/signup">
+              <button className="cta-btn">Sign Up</button>
+            </Link>
+          )}
           <Link to="/userprofile">
             <button className="cta-btn">Profile</button>
           </Link>

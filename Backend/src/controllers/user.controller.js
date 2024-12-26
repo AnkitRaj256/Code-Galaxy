@@ -1,26 +1,29 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"
 import { User } from '../model/user.model.js'
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { CompleteUserDetail } from "../model/userCompleteDetail.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Query } from "../model/doubts.model.js"
 import { Language } from "../model/language.model.js"
+import { oauth2Client } from "../utils/googleClient.js";
+import axios from 'axios';
 
-const generateAccessAndRefreshTokens = async(userId) => 
-    {
-        try {
-            const user = await User.findById(userId)
-            const accessToken = user.generateAccessToken()
-            const refreshToken = user.generateRefreshToken()
-    
-            user.refreshToken = refreshToken
-            await user.save({validateBeforeSave: true})
-    
-            return {accessToken, refreshToken}
-    
-        } catch (err) {
-            throw new ApiError(500, "Something went wrong while generating access and refresh tokens")
-        }
+const generateAccessAndRefreshTokens = (async(userId) => {
+    try {
+        const user = await User.findById(userId)
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+
+        user.refreshToken = refreshToken
+        await user.save({validateBeforeSave: true})
+
+        return {accessToken, refreshToken}
+
+    } catch (err) {
+        throw new ApiError(500, "Something went wrong while generating access and refresh tokens")
     }
+})
 
 const handleUserSignUp = asyncHandler(async (req, res) => {
     const { fullName, email, username, password } = req.body;
@@ -42,7 +45,8 @@ const handleUserSignUp = asyncHandler(async (req, res) => {
         fullName,
         email,
         password,
-        username: username.toLowerCase()
+        username: username.toLowerCase(),
+        emailToken: crypto.randomBytes(64).toString("hex")
         });
     
         const createdUser = await User.findById(user._id).select("-password -refreshToken");
@@ -66,7 +70,7 @@ const handleUserSignUp = asyncHandler(async (req, res) => {
         // Handle other errors
         throw new ApiError(500, "Something went wrong while registering the user");
     }
-});
+})
       
 const handleUserLogin = asyncHandler(async (req, res) => {
 
@@ -138,7 +142,7 @@ const getCurrentUser = asyncHandler(async(req, res) => {
     if (!req.user) {
         throw new ApiError(401, "Unauthorized", ["No user information available"]);
     }
-
+    
     return res
     .status(200)
     .json({
@@ -199,7 +203,6 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
     .json(new ApiResponse(200,{},"Password updated successfully"))
 })
 
-
 const postDoubt = asyncHandler(async (req, res) => {
     try {
         const { title, description, tags } = req.body;
@@ -250,6 +253,13 @@ const postDoubt = asyncHandler(async (req, res) => {
         const user = await User.findById(req.user._id);
         if (user) {
             user.questionsAsked += 1; // Increment the count
+
+            // Add the new question to 'quesAskId'
+            user.quesAskId.push({
+                queryId: query._id, // The ObjectId of the question
+                description: title.trim(), // The title from the request body
+            });
+
             await user.save(); // Save the updated user
         }
 
@@ -259,7 +269,6 @@ const postDoubt = asyncHandler(async (req, res) => {
         throw error; // AsyncHandler will catch and return the error
     }
 });
-
 
 const fetchData = asyncHandler(async (req, res) => {
     try {
@@ -272,24 +281,61 @@ const fetchData = asyncHandler(async (req, res) => {
 });
 
 const submitAnswer = asyncHandler(async (req, res) => {
-    const { doubtId, answerText } = req.body;
+    try {
+        const { text } = req.body;
+        const { queryId } = req.body; // Extract queryId from the request parameters      
     
-    if (
-        [doubtId, answerText].some((field) => field?.trim() === "")
-    ) {
-        throw new ApiError(400, "All fields are required")
-    }
+        // Validate the input
+        if (!text || text.trim() === "") {
+            return res.status(400).json({ message: "Text and answeredBy are required" });
+        }
     
-    const updatedDoubt = await Query.findByIdAndUpdate(doubtId, {
-        answer: answerText
-    }, { new: true }); // Returns the updated doubt
+        // Create a new answer object
+        const newAnswer = {
+            text: text.trim(), // Ensure no leading/trailing spaces
+            answeredBy: req.user._id, // Convert to ObjectId
+        };
+    
+        // Find the query by ID and update it
+        const query = await Query.findById(queryId);
+    
+        if (!query) {
+            return res.status(404).json({ message: "Query not found" });
+        }
+        
+        // Add the new answer to the answers array
+        query.answers.push(newAnswer);
+        const updatedQuery = await query.save();
+        
 
-    if (!updatedDoubt) {
-        throw new ApiError(404, "Doubt not found")
+        // Update the `questionsAnswered` field in the User model
+        const user = await User.findById(req.user._id);
+        if (user) {
+        user.questionsAnswered += 1; // Increment the count
+
+        // Add the new answer ID to 'questionsAnsweredId' if not already present
+        user.questionsAnsweredId.push({
+            queryId: query._id, // The ObjectId of the question
+            description: text.trim(), // The title from the request body
+        });
+        
+        await user.save(); // Save the updated user
+        } else {
+        return res.status(404).json({ message: "User not found" });
+        }
+    
+        // Return the updated query
+        res.status(201).json(updatedQuery);
+    } catch (error) {
+        console.error("Error submitting answer:", error);
+    
+        if (error instanceof mongoose.Error.CastError) {
+            return res.status(400).json({ message: "Invalid queryId or answeredBy" });
+        }
+    
+        res.status(500).json({ message: "Internal Server Error" });
     }
-
-    return res.json(updatedDoubt); // Returns the updated doubt
-});
+});  
 
 const displayPerticularDoubt = asyncHandler(async (req, res) => {
     try {
@@ -307,6 +353,150 @@ const displayPerticularDoubt = asyncHandler(async (req, res) => {
     }
 });
 
+const vote = asyncHandler(async (req, res) => {
+    try {
+        const { voteType, answerId, questionId } = req.body;
+
+        // Determine the update operation based on the vote type
+        const updateOperation =
+            voteType === 'upvote'
+                ? { $inc: { 'answers.$.upvotes': 1 } }
+                : voteType === 'downvote'
+                ? { $inc: { 'answers.$.downvotes': 1 } }
+                : null;
+
+        if (!updateOperation) {
+            return res.status(400).json({ error: 'Invalid vote type' });
+        }
+
+        // Perform an atomic update to increment the upvotes or downvotes
+        const updatedQuery = await Query.findOneAndUpdate(
+            { _id: questionId, 'answers._id': answerId }, // Match the query and answer IDs
+            updateOperation,
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedQuery) {
+            return res.status(404).json({ error: 'Question or Answer not found' });
+        }
+
+        // Find the updated answer in the answers array
+        const updatedAnswer = updatedQuery.answers.find(
+            (ans) => ans._id.toString() === answerId.toString()
+        );
+
+        if (!updatedAnswer) {
+            return res.status(404).json({ error: 'Answer not found after update' });
+        }
+
+        console.log('Vote updated successfully');
+        // Send back the updated answer with the new vote counts
+        res.json({
+            upvotes: updatedAnswer.upvotes,
+            downvotes: updatedAnswer.downvotes,
+        });
+    } catch (error) {
+        console.error('Error updating votes:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+const googleAuth = asyncHandler(async (req, res) => {
+    const code = req.query.code;
+
+    if (!code) {
+        throw new ApiError(400, "Authorization code is missing");
+    }
+
+    try{
+        const googleRes = await oauth2Client.getToken(code);
+        oauth2Client.setCredentials(googleRes.tokens);
+        const userRes = await axios.get(
+            `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
+        );
+        
+        const { email, name } = userRes.data;
+
+        let user = await User.findOne({email});
+
+        if (!user) {
+            user = await User.create({
+                fullName: name,
+                email,
+            });
+        }
+
+        const { accessToken,refreshToken } = await generateAccessAndRefreshTokens(user._id)
+
+        const loggedInUser = await User.findById(user._id).select( " -password -refreshToken" )
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+        }
+        
+        return res.status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(loggedInUser);
+    }
+    catch(error){
+        console.error("Error during Google OAuth:", error);
+        throw new ApiError(401, `Failed to authenticate with Google: ${error.message}`);
+    }
+});
+
+const updateProfile = (async (req, res) => {
+    try {
+        const { bio } = req.body; // Extract `bio` from the request body
+        const coverLocalPath = req.file?.path;
+
+        let coverImageUrl = null;
+
+        // Upload cover image if provided
+        if (coverLocalPath) {
+            const coverImage = await uploadOnCloudinary(coverLocalPath);
+
+            if (!coverImage.url) {
+                throw new ApiError(400, "Error while uploading CoverImg file");
+            }
+
+            coverImageUrl = coverImage.url;
+        }
+
+        // Check if the document exists
+        let userDetails = await User.findOne({ user: req.user?._id });
+        
+        const updateData = {};
+        if (coverImageUrl) updateData.coverImage = coverImageUrl;
+        if (bio) updateData.bio = bio;
+        
+        // Update the existing document
+        userDetails = await User.findOneAndUpdate(
+            { _id: req.user?._id }, // Correct filter
+            { $set: updateData },    // Correct update operation
+            { new: true, runValidators: true } // Options to return updated document and validate
+        );
+
+        // Send the response
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                userDetails,
+            )
+        );
+    } catch (error) {
+        return res.status(error.statusCode || 500).json(
+            new ApiResponse(
+                error.statusCode || 500,
+                null,
+                error.message ||"An error occurred"
+            )
+        );
+    }
+})
+
+
 export {
     handleUserSignUp,
     handleUserLogin,
@@ -318,4 +508,7 @@ export {
     postDoubt,
     fetchData,
     displayPerticularDoubt,
+    vote,
+    googleAuth,
+    updateProfile,
 };

@@ -1,18 +1,9 @@
 import React, { useState } from "react";
 import "./CSS/SignUp.css";
-import { FaGoogle, FaGithub } from "react-icons/fa";
+import GoogleLogin from './GoogleLogin';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const SocialLogin = () => (
-  <div className="social-login">
-    <button className="social-btn google">
-      <FaGoogle /> Sign in with Google
-    </button>
-    <button className="social-btn github">
-      <FaGithub /> Sign in with GitHub
-    </button>
-  </div>
-);
-
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 const SignupPage = () => {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -32,7 +23,7 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/api/v1/signUp", {
+      const response = await fetch(`${baseUrl}/api/v1/signUp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +60,9 @@ const SignupPage = () => {
   return (
     <div className="signup-page">
       <div className="container">
-        <SocialLogin />
+          <GoogleOAuthProvider clientId="271825264224-mbe58d3qu11v51ovm471v5gu2v3dgopv.apps.googleusercontent.com">
+          <GoogleLogin></GoogleLogin>
+        </GoogleOAuthProvider>
         <form className="signup-form" onSubmit={handleSubmit}>
           <h2>Sign Up</h2>
           <div className="form-group">
