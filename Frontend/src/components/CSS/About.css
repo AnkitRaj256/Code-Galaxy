@@ -56,6 +56,9 @@ body {
     font-weight: bold;
     color: #f0f0f0;
   }
+  .story-section p{
+    font-size: 1.5rem;
+  }
   
   .timeline {
     display: flex;
@@ -65,7 +68,7 @@ body {
   
   .milestone {
     margin: 15px 0;
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     padding: 15px;
     background-color: #3a3a3a; /* Dark background for milestones */
     border-radius: 5px;
@@ -80,7 +83,9 @@ body {
   .team-section {
     margin: 50px;
   }
-  
+  .team-title{
+    font-size: 2.5rem;
+  }
   .team-profiles {
     display: flex;
     gap: 20px;
@@ -135,7 +140,7 @@ body {
   }
   
   .portfolio-button:hover {
-    background-color: #0056b3;
+    background-color:#ab4646;
     transform: scale(1.05); /* Slightly grow on hover */
   }
   

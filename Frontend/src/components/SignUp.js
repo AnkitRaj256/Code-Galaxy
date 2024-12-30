@@ -60,9 +60,7 @@ const SignupPage = () => {
   return (
     <div className="signup-page">
       <div className="container">
-          <GoogleOAuthProvider clientId="271825264224-mbe58d3qu11v51ovm471v5gu2v3dgopv.apps.googleusercontent.com">
-          <GoogleLogin></GoogleLogin>
-        </GoogleOAuthProvider>
+          
         <form className="signup-form" onSubmit={handleSubmit}>
           <h2>Sign Up</h2>
           <div className="form-group">
@@ -116,6 +114,9 @@ const SignupPage = () => {
         <div className="forgot-password">
           <a href="#recover">Forgot your password?</a>
         </div>
+        <GoogleOAuthProvider clientId="271825264224-mbe58d3qu11v51ovm471v5gu2v3dgopv.apps.googleusercontent.com">
+          <GoogleLogin></GoogleLogin>
+        </GoogleOAuthProvider>
         <div className="already-user">
           <p>
             Already a user?{" "}

@@ -29,10 +29,20 @@ body {
   animation: fadeInUp 2s ease-in-out;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap');
+
+.hero h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  color: #ff6b6b;
+  text-shadow: 0 0 5px #923b3b, 0 0 10px #923b3b, 0 0 20px #923b3b;
+  font-size: 5rem;
+  animation: pulse 1.5s infinite alternate;
+}
+
 .hero h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 20px;
-  animation: slideIn 1.5s ease-in-out;
 }
 
 .cta-buttons {
@@ -48,12 +58,13 @@ body {
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
 }
 
 .cta-btn:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4);
+  background-color: #ff4c4c; /* Darker shade on hover */
 }
 
 .top-buttons {
@@ -74,48 +85,78 @@ body {
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .top-btn:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(255, 107, 107, 0.6);
+  background-color: #ff4c4c; /* Darker shade on hover */
 }
 
 .top-btn:focus {
   outline: 2px solid #ff6b6b;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
+.Others {
+  background: linear-gradient(135deg, #000000, #1e1e1e);
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide-in {
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.slide-in-active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-in-down {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-down-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bounce {
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
   }
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-100px);
+@keyframes pulse {
+  0% {
+    transform: scale(1);
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  100% {
+    transform: scale(1.05);
   }
 }
 
@@ -159,13 +200,12 @@ body {
 .features {
   padding: 100px;
   text-align: center;
-  background: linear-gradient(135deg, #000000, #1e1e1e);
 }
 
 .features h2 {
   color: #ff6b6b;
-  font-size: 2rem;
-  margin-bottom: 40px;
+  font-size: 2.5rem;
+  margin-bottom: 50px;
   animation: fadeInDown 1.5s ease-in-out;
 }
 
@@ -176,6 +216,20 @@ body {
   flex-wrap: wrap;
 }
 
+.feature-cards .card p {
+  font-size: 18px;
+  text-align: justify;
+}
+
+.feature-cards .card i {
+  font-size: 2rem;
+  font-style: normal;
+}
+
+.feature-cards .card h3 {
+  font-size: 1.4rem;
+}
+
 .card {
   background: #1e1e1e;
   padding: 20px;
@@ -183,7 +237,7 @@ body {
   width: 300px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s;
-  animation: fadeInUp 1s ease-in-out;
+  animation: fadeInUp 2s ease-in-out;
 }
 
 .card:hover {
@@ -191,21 +245,20 @@ body {
 }
 
 .trending {
-  padding: 100px;
-  background: linear-gradient(135deg, #000000, #1e1e1e);
+  padding: 80px;
 }
 
 .trending h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
+  font-size: 2.5rem;
   color: #ff6b6b;
-  animation: fadeInDown 1.5s ease-in-out;
+  padding-bottom: 50px;
 }
 
 .question-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 20px;
   justify-content: center;
 }
 
@@ -213,10 +266,10 @@ body {
   background-color: #2c2c2c;
   border: 1px solid #333;
   border-radius: 5px;
-  padding: 1rem;
-  width: 250px;
+  padding: 20px;
+  width: 400px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  animation: fadeInUp 1s ease-in-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .question-card:hover {
@@ -225,7 +278,7 @@ body {
 }
 
 .question-card h4 {
-  font-size: 1.1rem;
+  font-size: 25px;
   color: #fff;
 }
 
@@ -246,22 +299,18 @@ body {
 .qna-section {
   padding: 100px;
   text-align: center;
-  background: linear-gradient(135deg, #000000, #1e1e1e);
   color: #f4f4f4;
-  animation: fadeInUp 2s ease-in-out;
 }
 
 .qna-section h2 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #ff6b6b;
   margin-bottom: 20px;
-  animation: slideIn 1.5s ease-in-out;
 }
 
 .qna-section p {
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-  animation: fadeInDown 1.5s ease-in-out;
+  font-size: 20px;
+  margin-bottom: 50px;
 }
 
 .qna-btn {
@@ -273,7 +322,6 @@ body {
   border-radius: 25px;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  animation: fadeInUp 1s ease-in-out;
 }
 
 .qna-btn:hover {
@@ -287,16 +335,14 @@ body {
 
 .testimonials {
   padding: 100px;
-  background: linear-gradient(135deg, #000000, #1e1e1e);
   color: #fff;
   text-align: center;
 }
 
 .testimonials h2 {
   color: #ff6b6b;
-  margin-bottom: 2rem;
-  font-size: 2rem;
-  animation: fadeInDown 1.5s ease-in-out;
+  margin-bottom: 50px;
+  font-size: 2.5rem;
 }
 
 .testimonial-cards {
@@ -307,12 +353,27 @@ body {
 }
 
 .testimonial-card {
-  background-color: #333;
+  background-color: #262626;
+  color: #ffffff;
   border-radius: 5px;
+  border-width: 10px;
+  border-color: #494949;
+  border-style: solid;
   padding: 1rem;
-  width: 250px;
+  width: 350px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  animation: fadeInUp 1s ease-in-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card p {
+  text-align: left;
+  font-size: 18px;
+}
+
+.testimonial-card span {
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .testimonial-card:hover {
@@ -345,6 +406,24 @@ body {
   transform: scale(1.1);
 }
 
+.footer .copyright {
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
 .footer p {
   margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  .footer .social-icons .social-icon {
+    font-size: 20px;
+    margin: 0 5px;
+  }
+
+  .footer {
+    padding: 15px 0;
+    font-size: 12px;
+  }
 }

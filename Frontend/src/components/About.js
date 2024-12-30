@@ -64,9 +64,10 @@ const About = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
         >
-          {/* Example of milestones */}
-          <div className="milestone">Launched in 2024</div>
-          <div className="milestone">Reached 1M users</div>
+          {/* Future milestones */}
+          <div className="milestone">Launched in January 2025</div>
+          <div className="milestone">Goal: Reach 1 million users by December 2025</div>
+
         </motion.div>
       </section>
 
@@ -90,7 +91,7 @@ const About = () => {
             <img src={Ankit} alt="Ankit" className="profile-photo" />
             <h3>Ankit Raj</h3>
             <p className="description">I am a passionate Frontend Developer with expertise in creating intuitive and responsive web interfaces using technologies like HTML, CSS, JavaScript, React, and Bootstrap. I focus on delivering seamless user experiences while ensuring clean and efficient code. With a strong eye for design and functionality, I take pride in crafting engaging, user-friendly applications.</p>
-            <a href="https://janedoeportfolio.com" className="portfolio-button">Visit Portfolio</a>
+            <a href="https://ankit-raj-portfolio.vercel.app/" className="portfolio-button">Visit Portfolio</a>
             </motion.div>
             <motion.div
             className="profile-card"

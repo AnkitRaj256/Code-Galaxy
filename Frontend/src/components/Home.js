@@ -46,8 +46,8 @@ function Home() {
         </Link>
       </div>
       <section id="hero" className="hero">
-        <h2>Hello <span id="nameAfterLogin">{fullName}</span></h2>
-        <h1>Your one-stop solution for coding queries!</h1>
+        <h2>Welcome to Code Galaxy <span id="nameAfterLogin">{fullName}</span>!</h2>
+        <h1>Explore the universe of coding solutions, all in one place!</h1>
         <div className="cta-buttons">
           <Link to="/AskQuestion">
             <button className="cta-btn">Ask a Question</button>
@@ -63,27 +63,55 @@ function Home() {
         </div>
       </section>
 
+    <section className="Others">
       {/* Features Overview */}
       <section id="features" className="features">
         <h2>Platform Features</h2>
         <div className="feature-cards">
           <div className="card">
-            <i className="icon">🖥️</i>
-            <h3>Live Code Editor</h3>
-            <p>Write and test your code in real-time with our editor.</p>
+            <i className="icon">🏷️</i>
+            <h3>Topic Tags</h3>
+            <p>Add tags for specific topics like JavaScript, HTML, and CSS to easily filter your queries.</p>
           </div>
           <div className="card">
-            <i className="icon">🤖</i>
-            <h3>AI Suggestions</h3>
-            <p>Get smart code suggestions based on your queries.</p>
+            <i className="icon">👍👎</i>
+            <h3>Upvote & Downvote</h3>
+            <p>Rate responses to help others find the most accurate and helpful answers quickly.</p>
           </div>
           <div className="card">
-            <i className="icon">🎮</i>
-            <h3>Gamified Learning</h3>
-            <p>Learn while having fun with interactive challenges.</p>
+            <i className="icon">🏆</i>
+            <h3>Leaderboards</h3>
+            <p>View the top contributors and their expertise to gain insights into community knowledge.</p>
+          </div>
+          <div className="card">
+            <i className="icon">💬</i>
+            <h3>Multiple Replies</h3>
+            <p>Get diverse answers for your questions to enhance your understanding and learning.</p>
+          </div>
+          <div className="card">
+            <i className="icon">📊</i>
+            <h3>Analytics Dashboard</h3>
+            <p>Monitor your learning journey with detailed analytics and insights about your activity.</p>
+          </div>
+          <div className="card">
+            <i className="icon">🔔</i>
+            <h3>Real-time Notifications</h3>
+            <p>Stay updated with instant notifications whenever someone replies to your questions.</p>
+          </div>
+          <div className="card">
+            <i className="icon">📚</i>
+            <h3>Resource Library</h3>
+            <p>Access a rich library of coding resources, tutorials, and guides for your learning.</p>
+          </div>
+          <div className="card">
+            <i className="icon">🛠️</i>
+            <h3>Customizable Settings</h3>
+            <p>Personalize your experience with various settings tailored to your preferences.</p>
           </div>
         </div>
       </section>
+
+
 
       {/* Trending Questions */}
       <section id="trending" className="trending">
@@ -99,33 +127,70 @@ function Home() {
             <span className="tags">#JavaScript #Variables</span>
             <span className="votes">Votes: 38</span>
           </div>
+          <div className="question-card">
+            <h4>How to handle asynchronous requests in JavaScript?</h4>
+            <span className="tags">#JavaScript #Async</span>
+            <span className="votes">Votes: 35</span>
+          </div>
+          <div className="question-card">
+            <h4>What are the main features of CSS Grid layout?</h4>
+            <span className="tags">#CSS #Grid</span>
+            <span className="votes">Votes: 29</span>
+          </div>
+          <div className="question-card">
+            <h4>How can I improve my website's loading speed?</h4>
+            <span className="tags">#WebDev #Performance</span>
+            <span className="votes">Votes: 45</span>
+          </div>
+          <div className="question-card">
+            <h4>What is the purpose of the 'this' keyword in JavaScript?</h4>
+            <span className="tags">#JavaScript #Scope</span>
+            <span className="votes">Votes: 33</span>
+          </div>
         </div>
       </section>
 
+
       {/* QnA Section */}
       <section id="qna" className="qna-section">
-        <h2>Explore Our Q&A Section</h2>
-        <p>Have questions? Get answers from our vibrant community of coders. Join the discussion and expand your knowledge!</p>
+        <h2>Unlock Knowledge in Our Q&A Hub!</h2>
+        <p>Got questions? Dive into insights from our passionate coding community. Join the conversation and elevate your skills!</p>
         <Link to="/QnA">
-          <button className="qna-btn">Visit Q&A</button>
+            <button className="qna-btn">Join the Q&A</button>
         </Link>
       </section>
 
 
       {/* User Testimonials */}
       <section id="testimonials" className="testimonials">
-        <h2>What Our Users Say</h2>
+        <h2>What Our Users Are Raving About</h2>
         <div className="testimonial-cards">
-          <div className="testimonial-card">
-            <p>"This platform has helped me solve coding problems faster. The AI suggestions are spot on!"</p>
-            <span>- Jane Doe</span>
+            <div className="testimonial-card">
+                <p>"This platform has completely changed my coding journey! The AI suggestions are incredibly accurate and help me solve problems quickly!"</p>
+                <span>- Aarav Sharma</span>
+            </div>
+            <div className="testimonial-card">
+                <p>"I love the gamified approach! It makes learning to code enjoyable and engaging while also being educational!"</p>
+                <span>- Priya Patel</span>
+            </div>
+            <div className="testimonial-card">
+                <p>"My coding skills have improved drastically! The instant feedback and guidance are game-changers for my learning!"</p>
+                <span>- Rohan Verma</span>
+            </div>
+            <div className="testimonial-card">
+                <p>"This platform makes coding concepts easy to grasp! The interactive elements make learning so much more fun!"</p>
+                <span>- Neha Gupta</span>
+            </div>
+            <div className="testimonial-card">
+                <p>"I’ve advanced my coding skills significantly thanks to this platform! The community support really boosts my confidence!"</p>
+                <span>- Siddharth Iyer</span>
+            </div>
           </div>
-          <div className="testimonial-card">
-            <p>"Love the gamified approach. It's fun and educational!"</p>
-            <span>- John Smith</span>
-          </div>
-        </div>
       </section>
+
+
+    </section>
+
 
       {/* Footer */}
       <footer id="footer" className="footer">
