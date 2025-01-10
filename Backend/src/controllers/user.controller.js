@@ -388,8 +388,6 @@ const vote = asyncHandler(async (req, res) => {
         if (!updatedAnswer) {
             return res.status(404).json({ error: 'Answer not found after update' });
         }
-
-        console.log('Vote updated successfully');
         // Send back the updated answer with the new vote counts
         res.json({
             upvotes: updatedAnswer.upvotes,

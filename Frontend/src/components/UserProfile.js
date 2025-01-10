@@ -71,7 +71,6 @@ useEffect(() => {
     }
     
     formData.append('bio', bio); // Add bio
-    
     fetch('http://localhost:8000/api/v1/update-profile', { // Replace with your backend endpoint
       method: 'PUT',
       body: formData,
@@ -213,7 +212,7 @@ useEffect(() => {
         <div className="modal">
           <div className="modal-content">
             <h2>Edit Profile</h2>
-
+            
             {/* Profile Picture Update */}
             <div className="update-profile-pic">
               <img
@@ -236,6 +235,8 @@ useEffect(() => {
               onChange={(e) => setBio(e.target.value)}
             ></textarea>
 
+            <p>Your need to relogin for changes to apply.</p>
+            <br></br>
             {/* Modal Actions */}
             <div className="modal-actions">
               <button onClick={() => setIsEditing(false)}>Cancel</button>
