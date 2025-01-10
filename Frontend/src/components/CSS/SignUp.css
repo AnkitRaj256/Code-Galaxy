@@ -84,7 +84,7 @@ body {
     align-items: center;
     gap: 0.5rem;
     padding: 0.8rem;
-    width: 48%;
+    width: 100%;
     border: none;
     border-radius: 5px;
     font-size: 0.9rem;
@@ -92,7 +92,7 @@ body {
   }
   
   .social-btn.google {
-    background: #db4437;
+    background:#652a2a;
     color: #fff;
   }
   

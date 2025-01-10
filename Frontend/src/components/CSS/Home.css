@@ -34,7 +34,7 @@ body {
 .hero h2 {
   font-family: 'Playfair Display', serif;
   font-weight: 600;
-  color: #ff6b6b;
+  color: #fe5353;
   text-shadow: 0 0 5px #923b3b, 0 0 10px #923b3b, 0 0 20px #923b3b;
   font-size: 5rem;
   animation: pulse 1.5s infinite alternate;
@@ -50,7 +50,7 @@ body {
 }
 
 .cta-btn {
-  background-color: #ff6b6b;
+  background-color: #fe5353;
   color: #fff;
   padding: 12px 30px;
   margin: 10px;
@@ -64,7 +64,7 @@ body {
 .cta-btn:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4);
-  background-color: #ff4c4c; /* Darker shade on hover */
+  background-color: #fe5353; /* Darker shade on hover */
 }
 
 .top-buttons {
@@ -78,7 +78,7 @@ body {
 }
 
 .top-btn {
-  background-color: #ff6b6b;
+  background-color: #fe5353;
   color: #fff;
   padding: 12px 25px;
   font-size: 1rem;
@@ -91,11 +91,11 @@ body {
 .top-btn:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(255, 107, 107, 0.6);
-  background-color: #ff4c4c; /* Darker shade on hover */
+  background-color: #fe5353; /* Darker shade on hover */
 }
 
 .top-btn:focus {
-  outline: 2px solid #ff6b6b;
+  outline: 2px solid #fe5353;
 }
 
 .Others {
@@ -175,7 +175,7 @@ body {
 
 .logo {
   font-size: 1.8rem;
-  color: #ff6b6b;
+  color: #fe5353;
   font-weight: bold;
 }
 
@@ -245,7 +245,7 @@ body {
 }
 
 .trending {
-  padding: 80px;
+  padding: 50px;
 }
 
 .trending h2 {

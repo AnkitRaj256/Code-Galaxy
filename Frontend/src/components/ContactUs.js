@@ -1,15 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import CustomCursor from "./CustomCursor";
 import './CSS/ContactUs.css';
 
 const ContactUs = () => {
   return (
+    
     <motion.section
       className="contact-us"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
+    <CustomCursor />
       <motion.h1
         className="contact-heading"
         initial={{ x: '-100vw' }}

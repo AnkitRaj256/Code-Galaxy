@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CSS/QnA.css'; // Optional CSS file for additional styling
+import { Link, useLocation } from "react-router-dom";
+import CustomCursor from "./CustomCursor";
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const QnA = () => {
@@ -70,6 +72,17 @@ const QnA = () => {
   const handleAskQuestion = () => navigate('/askquestion'); // Redirect to an ask question page
 
   return (
+    <div>
+    <CustomCursor />
+      <nav className="navbar">
+            <div className="logo">Code Galaxy</div>
+            <ul className="nav-links">
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/about">About Us</Link></li>
+              <li><Link to="/contactus">Contact Us</Link></li>
+              <li><Link to="/userprofile">Profile</Link></li>
+            </ul>
+          </nav>
     <div className="qna-container">
       <div className="qna-header">
         <input
@@ -84,8 +97,32 @@ const QnA = () => {
             <option value="">Filter by Tag</option>
             <option value="JavaScript">JavaScript</option>
             <option value="Algorithms">Algorithms</option>
+            <option value="React">React</option>
+            <option value="CSS">CSS</option>
+            <option value="HTML">HTML</option>
+            <option value="Python">Python</option>
+            <option value="Data Structures">Data Structures</option>
+            <option value="Node.js">Node.js</option>
+            <option value="Databases">Databases</option>
+            <option value="SQL">SQL</option>
+            <option value="NoSQL">NoSQL</option>
+            <option value="APIs">APIs</option>
+            <option value="TypeScript">TypeScript</option>
+            <option value="Backend Development">Backend Development</option>
+            <option value="Frontend Development">Frontend Development</option>
+            <option value="Web Performance">Web Performance</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Big O Notation">Big O Notation</option>
+            <option value="Debugging">Debugging</option>
+            <option value="Testing">Testing</option>
+            <option value="Version Control">Version Control</option>
+            <option value="Git">Git</option>
+            <option value="DevOps">DevOps</option>
+            <option value="Cloud Computing">Cloud Computing</option>
+            <option value="Security">Security</option>
+            <option value="Accessibility">Accessibility</option>
           </select>
-          <label>
+          <label className='Check'>
             <input
               type="checkbox"
               name="unanswered"
@@ -94,6 +131,7 @@ const QnA = () => {
             Unanswered
           </label>
           <select name="sortBy" onChange={handleFilterChange}>
+            <option value="">Sort by</option>
             <option value="recent">Sort by Recent</option>
             <option value="votes">Sort by Votes</option>
           </select>
@@ -127,6 +165,7 @@ const QnA = () => {
       <button className="ask-question-btn" onClick={handleAskQuestion}>
         Ask a Question
       </button>
+    </div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CSS/SignIn.css";
+import CustomCursor from "./CustomCursor";
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const SignInPage = () => {
@@ -46,10 +47,11 @@ const SignInPage = () => {
 
   return (
     <div className="sign-in-page">
+    <CustomCursor />
       <div className="background-animation"></div>
       <div className="sign-in-container">
         <h1>Welcome Back!</h1>
-        <p>Please sign in to continue</p>
+        <p>Please Sign In to continue</p>
         <form className="sign-in-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email</label>

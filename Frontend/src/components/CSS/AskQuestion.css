@@ -40,7 +40,9 @@
 
 .question-list {
   list-style-type: none;
-  padding: 10px;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .question-list li {
@@ -50,13 +52,21 @@
   padding: 20px;
   border-radius: 8px;
   background-color: #333;
+  max-width: 450px;
+  z-index: 0;
 }
 
 .question-list li:hover {
   transform: translateX(5px);
   background-color: #444;
 }
-
+.question-list h3{
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+.question-list h3{
+  font-size: 20px;
+}
 .popular-topics ul {
   list-style-type: none;
   padding: 0;
@@ -91,7 +101,7 @@
   font-size: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
-  z-index: 100;
+  z-index: 1;
   cursor: pointer;
 }
 
@@ -121,6 +131,19 @@
     display: inline-block;
   }
 }
+.remove-tag-button {
+  margin-left: 8px;
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-tag-button:hover {
+  color: darkred;
+}
+
 
 .modal {
   position: fixed;

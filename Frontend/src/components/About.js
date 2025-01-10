@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
+import CustomCursor from "./CustomCursor";
 import "./CSS/About.css";
 import Ankit from "./Images/Ankit.jpg";
 import Srijan from "./Images/Srijan.jpg";
@@ -25,15 +27,26 @@ const About = () => {
 
   return (
     <div className="about-page dark">
+    <CustomCursor />
+      <nav className="navbar">
+        <div className="logo">About Us</div>
+        <ul className="nav-links">
+          <li><Link to="/">Home</Link></li>
+          <li><a href="#developers">Developers</a></li>
+          <li><Link to="/contactus">Contact Us</Link></li>
+        </ul>
+      </nav>
+
+
       <header className="header">
-        <motion.h1
+        {/* <motion.h1
           className="about-title"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
         >
-          About Us
-        </motion.h1>
+          Code Galaxy :
+        </motion.h1> */}
         <motion.p
           className="tagline"
           initial={{ scale: 0 }}
@@ -72,7 +85,7 @@ const About = () => {
       </section>
 
       {/* Team Section */}
-      <section className="team-section">
+      <section id="developers" className="team-section">
         <motion.h2
             className="team-title"
             initial={{ opacity: 0 }}

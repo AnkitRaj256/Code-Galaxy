@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './CSS/QnA.css';
+import CustomCursor from "./CustomCursor";
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const QuestionDetail = () => {
@@ -133,14 +134,15 @@ const QuestionDetail = () => {
 
   return (
     <div className="qna-container">
-      <button className="GoBack" onClick={() => navigate(-1)} style={{ marginBottom: '10px' }}>
+    <CustomCursor />
+      <button className="GoBack" onClick={() => navigate(-1)} style={{ marginBottom: '20px' }}>
         Go Back
       </button>
       <div className="question-detail">
-        <h2>{question.title}</h2>
-        <p>{question.description}</p>
+        <h2>Q. {question.title}</h2>
+        <p>Description: {question.description}</p>
         <div className="tags">
-          {question.tags }
+          Tags: {question.tags }
         </div>
         <div className="meta">
           <span>{new Date(question.timePosted).toLocaleString()}</span>

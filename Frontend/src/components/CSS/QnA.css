@@ -8,9 +8,8 @@ body {
   }
   
   .qna-container {
-    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 50px;
   }
   
   /* Header Section */
@@ -42,10 +41,34 @@ body {
     border-radius: 10px;
     margin-left: 20px;
   }
+  .Check {
+    display: flex;
+    align-items: center;
+    font-size: 16px; /* Adjust font size for readability */
+    color: #fff; /* Text color for better contrast */
+    cursor: pointer; /* Pointer cursor for better UX */
+    gap: 8px; /* Add space between checkbox and label text */
+    padding: 5px 10px; /* Add padding for better clickability */
+    border-radius: 4px; /* Smooth corners */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .Check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer; /* Pointer cursor for the checkbox */
+    accent-color: #ff6b6b; /* Customize checkbox color */
+  }
+  
+  .Check input[type="checkbox"]:checked {
+    background-color: #ff6b6b; /* Checked state color */
+    border: 2px solid #ff6b6b; /* Add a border for checked state */
+  }
+  
   
   .filters select,
   .filters label {
-    padding: 5px;
+    padding: 15px;
     font-size: 14px;
     border: 1px solid #444;
     border-radius: 4px;
@@ -56,9 +79,10 @@ body {
   
   /* Question List */
   .question-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 15px;
+    display: inline-flex;
+    flex-wrap: wrap; /* Allow wrapping to prevent overlapping */
+    gap: 20px; /* Space between the cards */
+    padding: 10px; /* Space around the list */
   }
   
   .question-card {
@@ -68,11 +92,13 @@ body {
     padding: 15px;
     transition: box-shadow 0.3s ease;
     cursor: pointer;
+    width: 450px;
   }
   
   .question-card:hover {
     box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
   }
+  
   
   .question-card h3 {
     font-size: 18px;
@@ -110,9 +136,9 @@ body {
   /* Ask Question Button */
   .ask-question-btn {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #ff4c4c;
+    bottom: 30px;
+    right: 30px;
+    background-color: #fe5353;
     color: #e0e0e0;
     padding: 15px 20px;
     font-size: 16px;
@@ -149,6 +175,23 @@ body {
     padding: 20px;
     border-radius: 6px;
     margin-bottom: 20px;
+  }
+  .question-detail h2{
+    text-align: left;
+  }
+  .question-detail p{
+    margin-top: -10px;
+    font-size: 20px;
+    text-align: left;
+  }
+  .tags{
+    color: #d45b5b;
+    margin-top: 50px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .meta{
+    text-align: right;
   }
   
   .answers-section {
@@ -202,21 +245,13 @@ body {
   }
      
   .GoBack{
+    font-size: 14px;
     background-color: #ff4c4c;
-    padding: 5px;
+    padding: 10px;
     color: white;
     border-radius: 10px;
     border-color: #ff4c4c;
   }
   .GoBack:hover{
     background-color: #df4141;
-  }
-
-  .unanswered {
-    display: inline-flex;
-    align-items: center;
-  }
-  
-  .unanswered input[type="checkbox"] {
-    margin-right: 8px;
   }

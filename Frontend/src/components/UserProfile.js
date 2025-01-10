@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
 import "./CSS/UserProfile.css";
+import CustomCursor from "./CustomCursor";
 import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
@@ -123,6 +125,17 @@ useEffect(() => {
 
   return (
     <div className="user-profile dark">
+    <CustomCursor />
+      <nav className="navbar">
+        <div className="logo">Your Profile</div>
+        <ul className="nav-links">          
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/about">About Us</Link></li>
+          <li><Link to="/QnA">QnA</Link></li>
+          <li><Link to="/contactus">Contact Us</Link></li>
+        </ul>
+      </nav>
+      <section className="UserPro">
       {/* Header Section */}
       <header className="header">
         <div className="profile">
@@ -238,6 +251,7 @@ useEffect(() => {
           <img src={profilePic} alt="Profile Fullscreen" /> {/* Use profilePic */}
         </div>
       )}
+      </section>
     </div>
   );
 };

@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from "react-router-dom";
+import CustomCursor from "./CustomCursor";
 import './CSS/AskQuestion.css';
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 // Sample data for previously asked questions and popular topics
 const sampleQuestions = [
-  { id: 1, title: 'How to optimize a for loop in JavaScript?', description: 'Looking for ways to optimize a for loop in my JS code.' },
-  { id: 2, title: 'Understanding React useEffect Hook', description: 'Can someone explain useEffect in React in simple terms?' },
-  { id: 3, title: 'Why is my Python code running slowly?', description: 'My Python program is too slow, how can I improve performance?' },
-  { id: 1, title: 'How to optimize a for loop in JavaScript?', description: 'Looking for ways to optimize a for loop in my JS code.' },
-  { id: 2, title: 'Understanding React useEffect Hook', description: 'Can someone explain useEffect in React in simple terms?' },
-  { id: 3, title: 'Why is my Python code running slowly?', description: 'My Python program is too slow, how can I improve performance?' },
-  { id: 1, title: 'How to optimize a for loop in JavaScript?', description: 'Looking for ways to optimize a for loop in my JS code.' },
-  { id: 2, title: 'Understanding React useEffect Hook', description: 'Can someone explain useEffect in React in simple terms?' },
+  { id: 1, title: 'Optimizing for loops in JavaScript', description: 'How can I optimize my for loops in JavaScript effectively?' },
+  { id: 2, title: 'Using the React useEffect Hook', description: 'Could you explain how the useEffect hook works in React?' },
+  { id: 3, title: 'Improving performance of Python code', description: 'What steps can I take to enhance the performance of my Python code?' },
+  { id: 4, title: 'let vs var vs const in JavaScript', description: 'What are the key differences between let, var, and const in JS?' },
+  { id: 5, title: 'Best practices for debugging Node.js', description: 'What are some effective practices for debugging Node.js apps?' },
+  { id: 6, title: 'Centering a div using CSS techniques', description: 'What is the best way to center a div both vertically and horizontally?' },
+  { id: 7, title: 'Async/await in JavaScript explained', description: 'Can you provide clear examples of using async/await in JavaScript?' },
+  { id: 8, title: 'Explaining decorators in Python', description: 'How do Python decorators work, and when should I use them?' },
+  { id: 9, title: 'Managing state effectively in React', description: 'What are common methods for managing state in a React app?' },
+  { id: 10, title: 'Comparing SQL and NoSQL databases', description: 'What are the main differences and when to use SQL or NoSQL databases?' },
+  { id: 11, title: 'Optimizing CSS for large applications', description: 'What tips can help me improve CSS performance in large-scale projects?' },
+  { id: 12, title: 'Simple explanation of closures in JS', description: 'Can you explain closures in JavaScript with clear examples?' },
+  { id: 13, title: 'Handling API errors in React apps', description: 'What are best practices for managing API errors in React applications?' },
+  { id: 14, title: 'Big O Notation for beginners', description: 'Could you provide a beginner-friendly overview of Big O notation?' },
 ];
+
 
 const popularTopics = ['JavaScript', 'React', 'Node.js', 'Python', 'CSS', 'HTML'];
 
@@ -88,6 +97,13 @@ const AskQuestionPage = () => {
       }
     }
   };
+  const handleRemoveTag = (tagToRemove) => {
+    const updatedTags = questionData.tags
+      .split('#')
+      .filter((tag) => tag !== tagToRemove)
+      .join('#');
+    setQuestionData({ ...questionData, tags: updatedTags });
+  };
   
 
   // Handle tag selection change
@@ -118,7 +134,17 @@ const AskQuestionPage = () => {
   };
 
   return (
-    <div className="ask-question-page">
+    <div className="ask-question-page1">
+    <CustomCursor />
+      <nav className="navbar">
+        <div className="logo">Code Galaxy</div>
+        <ul className="nav-links">
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/about">About Us</Link></li>
+          <li><Link to="/contactus">Contact Us</Link></li>
+        </ul>
+      </nav>
+      <div className="ask-question-page">
       {/* Welcome Section */}
       <section className="welcome-section">
         <h1>Welcome to the Q&A Page</h1>
@@ -229,10 +255,17 @@ const AskQuestionPage = () => {
               <div className="form-group">
                 <label htmlFor="selected-tags">Selected Tags</label>
                 <div id="selected-tags" className="selected-tags-display">
-                  {questionData.tags ? (
+                  {questionData.tags && questionData.tags.length > 0 ? (
                     questionData.tags.split('#').map((tag, index) => (
                       <span key={index} className="tag">
                         {tag}
+                        <button
+                          type="button"
+                          className="remove-tag-button"
+                          onClick={() => handleRemoveTag(tag)}
+                        >
+                          ✖
+                        </button>
                       </span>
                     ))
                   ) : (
@@ -251,6 +284,8 @@ const AskQuestionPage = () => {
           </div>
         </div>
       )}
+
+      </div>
     </div>
   );
 };

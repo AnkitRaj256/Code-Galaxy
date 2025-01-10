@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import CustomCursor from "./CustomCursor";
 import './CSS/LeaderBoard.css'; // Styles are included below
 
 const LeaderBoard = () => {
   // Example leaderboard data
   const [leaders, setLeaders] = useState([
-    { rank: 1, name: 'Alice', score: 1500 },
-    { rank: 2, name: 'Bob', score: 1400 },
-    { rank: 3, name: 'Charlie', score: 1300 },
-    { rank: 4, name: 'David', score: 1200 },
-    { rank: 5, name: 'Eve', score: 1100 },
-  ]);
+    { rank: 1, name: 'Ankit', score: 1500 },
+    { rank: 2, name: 'Vihaan', score: 1400 },
+    { rank: 3, name: 'Kavya', score: 1300 },
+    { rank: 4, name: 'Ishita', score: 1200 },
+    { rank: 5, name: 'Anaya', score: 1100 },
+    { rank: 6, name: 'Rohan', score: 1000 },
+    { rank: 7, name: 'Advika', score: 900 },
+    { rank: 8, name: 'Arjun', score: 800 },
+]);
 
   return (
     <motion.section
@@ -19,6 +23,7 @@ const LeaderBoard = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
+    <CustomCursor />
       <motion.h1
         className="leaderboard-heading"
         initial={{ x: '-100vw' }}

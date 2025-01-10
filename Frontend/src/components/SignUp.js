@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./CSS/SignUp.css";
 import GoogleLogin from './GoogleLogin';
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import CustomCursor from "./CustomCursor";
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 const SignupPage = () => {
@@ -59,6 +60,7 @@ const SignupPage = () => {
 
   return (
     <div className="signup-page">
+    <CustomCursor />
       <div className="container">
           
         <form className="signup-form" onSubmit={handleSubmit}>

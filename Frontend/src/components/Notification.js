@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import CustomCursor from "./CustomCursor";
 import './CSS/Notification.css';
 
 const Notification = () => {
   const [notifications, setNotifications] = useState([
-    { id: 1, title: 'System Update', message: 'A new update is available for your system.', type: 'info' },
-    { id: 2, title: 'Security Alert', message: 'Your account login was detected from a new device.', type: 'warning' },
-    { id: 3, title: 'Promotion', message: '50% off on your next purchase! Don’t miss out!', type: 'success' },
-  ]);
+    { id: 1, title: 'New Solution Available', message: 'Your doubt "How to implement a binary search?" has been answered by Alex.', type: 'success' },
+    { id: 2, title: 'Review Pending', message: 'Please review the solution provided for your doubt "Difference between BFS and DFS."', type: 'info' },
+    { id: 3, title: 'Doubt Approved', message: 'Your posted doubt "Best practices for API integration in Node.js" has been approved by moderators.', type: 'success' },
+    { id: 4, title: 'Moderator Feedback', message: 'Your doubt "How to optimize SQL queries?" needs more clarity. Please update the description.', type: 'warning' },
+    { id: 5, title: 'New Comment', message: 'Alex commented on your doubt: "Try indexing on the column to improve query speed."', type: 'info' },
+    { id: 6, title: 'Solution Removed', message: 'The solution provided for your doubt "How to create a REST API in Flask?" was flagged and removed.', type: 'error' },
+]);
+
 
   const handleClearNotifications = () => {
     setNotifications([]);
@@ -20,6 +25,7 @@ const Notification = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
+    <CustomCursor />
       <motion.h1
         className="notification-heading"
         initial={{ x: '-100vw' }}

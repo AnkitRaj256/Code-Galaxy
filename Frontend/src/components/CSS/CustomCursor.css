@@ -1,0 +1,19 @@
+/* CustomCursor.css */
+body {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="5" height="5"><circle cx="5" cy="5" r="5" fill="white" /></svg>') 5 5, auto; /* Use a dot cursor */
+}
+
+.custom-cursor {
+  position: fixed;
+  width: 18px; /* Adjust size */
+  height: 18px; /* Adjust size */
+  background-color: white; /* Change color */
+  border-radius: 50%; /* Make it circular */
+  pointer-events: none; /* Ignore mouse events */
+  transition: background-color 0.3s ease; /* Smooth transition */
+  z-index: 9999; /* Ensure it's above other elements */
+}
+
+.custom-cursor:hover {
+  background-color: white; /* Change color on hover */
+}
