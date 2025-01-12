@@ -102,6 +102,9 @@ body {
 .edit-btn:hover {
   background-color: #913b3b;
 }
+#EditBtn{
+  margin-left: 60%;
+}
 
 .dashboard {
   display: grid;

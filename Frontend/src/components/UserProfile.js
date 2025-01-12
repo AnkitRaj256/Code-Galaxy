@@ -149,16 +149,16 @@ useEffect(() => {
           <p className="bio">{bio}</p>
         </div>
         
+        <button className="edit-btn" id="EditBtn" onClick={() => setIsEditing(true)}>
+          ✏️ Update Profile
+        </button>
+
         {/* Conditionally render the logout button if the user is logged in */}
         {isLoggedIn && (
           <button className="edit-btn" id="logout-btn" onClick={handleLogout}>
             Logout
           </button>
         )}
-        
-        <button className="edit-btn" onClick={() => setIsEditing(true)}>
-          ✏️ Update Profile
-        </button>
       </header>
 
       {/* Dashboard Overview Section */}
