@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import "./CSS/UserProfile.css";
 import CustomCursor from "./CustomCursor";
 import { useNavigate } from "react-router-dom";
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const UserProfile = () => {
   // State hooks inside the component
@@ -71,7 +72,7 @@ useEffect(() => {
     }
     
     formData.append('bio', bio); // Add bio
-    fetch('http://localhost:8000/api/v1/update-profile', { // Replace with your backend endpoint
+    fetch(`${baseUrl}/api/v1/update-profile`, { // Replace with your backend endpoint
       method: 'PUT',
       body: formData,
       credentials: "include",
@@ -96,7 +97,7 @@ useEffect(() => {
   const handleLogout = async () => {
     try {
         // Send a POST request to log out
-        const response = await fetch('http://localhost:8000/api/v1/logout', {
+        const response = await fetch(`${baseUrl}/api/v1/logout`, {
             method: 'POST',
             credentials: 'include', // Ensures cookies are sent along with the request
         });
